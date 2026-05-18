@@ -200,7 +200,15 @@ class Router {
      */
     private function handle404() {
         http_response_code(404);
-        echo "Página no encontrada - Error 404";
+        echo "Página no encontrada - Error 404<br>";
+        if (defined('APP_DEBUG') && APP_DEBUG) {
+            echo "<div style='font-family: monospace; margin-top: 20px; padding: 15px; background: #f8d7da; color: #721c24; border-radius: 5px;'>";
+            echo "<strong>[Ruta Debug]</strong><br>";
+            echo "URI original: " . htmlspecialchars($_SERVER['REQUEST_URI']) . "<br>";
+            echo "Método: " . htmlspecialchars($_SERVER['REQUEST_METHOD']) . "<br>";
+            echo "Cleaned URI: " . htmlspecialchars(parse_url(urldecode($_SERVER['REQUEST_URI']), PHP_URL_PATH)) . "<br>";
+            echo "</div>";
+        }
     }
     
     /**
