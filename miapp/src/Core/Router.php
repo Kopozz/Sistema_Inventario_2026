@@ -126,7 +126,7 @@ class Router {
         
         // Si no se encuentra la ruta, mostrar 404
         error_log("Router: No se encontró ruta para {$method} {$uri}");
-        $this->handle404();
+        $this->handle404($uri);
     }
     
     /**
@@ -165,7 +165,7 @@ class Router {
         
         // Verificar que la clase existe
         if (!class_exists($controllerClass)) {
-            throw new Exception("Controlador no encontrado: {$controllerClass}");
+            throw new \Exception("Controlador no encontrado: {$controllerClass}");
         }
         
         // Crear instancia del controlador
@@ -173,7 +173,7 @@ class Router {
         
         // Verificar que el método existe
         if (!method_exists($controller, $methodName)) {
-            throw new Exception("Método no encontrado: {$methodName} en {$controllerClass}");
+            throw new \Exception("Método no encontrado: {$methodName} en {$controllerClass}");
         }
         
         // Extraer parámetros de la URI si los hay
@@ -198,12 +198,13 @@ class Router {
     /**
      * Manejar error 404
      */
-    private function handle404() {
+    private function handle404($failedUri = '') {
         http_response_code(404);
         echo "Página no encontrada - Error 404<br>";
         if (defined('APP_DEBUG') && APP_DEBUG) {
             echo "<div style='font-family: monospace; margin-top: 20px; padding: 15px; background: #f8d7da; color: #721c24; border-radius: 5px;'>";
-            echo "<strong>[Ruta Debug]</strong><br>";
+            echo "<strong>[ALERTA DE ROUTER]</strong><br>";
+            echo "URI pasada a handleRequest: <span style='font-size:1.2em;font-weight:bold;color:red;'>" . htmlspecialchars($failedUri) . "</span><br><br>";
             echo "URI original: " . htmlspecialchars($_SERVER['REQUEST_URI']) . "<br>";
             echo "Método: " . htmlspecialchars($_SERVER['REQUEST_METHOD']) . "<br>";
             $cleaned = parse_url(urldecode($_SERVER['REQUEST_URI']), PHP_URL_PATH);
@@ -214,15 +215,15 @@ class Router {
             if ($cleaned === '/index.php') {
                 $cleaned = '/';
             }
-            echo "Cleaned URI: " . htmlspecialchars($cleaned) . "<br>";
+            echo "Cleaned URI manual: " . htmlspecialchars($cleaned) . "<br>";
             
             echo "<br><strong>Análisis de Match para /usuarios/{id}:</strong><br>";
             $testRoute = '/usuarios/{id}';
             $pattern = preg_replace('/\{[^}]+\}/', '([^/]+)', $testRoute);
             $pattern = '#^' . $pattern . '$#';
-            $res = preg_match($pattern, $cleaned);
+            $res = preg_match($pattern, $failedUri);
             echo "Pattern: " . htmlspecialchars($pattern) . "<br>";
-            echo "URI a comparar: " . htmlspecialchars($cleaned) . "<br>";
+            echo "URI a comparar (failedUri): " . htmlspecialchars($failedUri) . "<br>";
             echo "Resultado preg_match: " . ($res ? "SI MATCHEA (1)" : "NO MATCHEA (0)") . "<br>";
             
             echo "<br><strong>Rutas Cargadas (" . count($this->routes) . "):</strong><br>";
