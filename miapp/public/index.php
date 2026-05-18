@@ -39,12 +39,15 @@ session_start();
 $requestUri = urldecode($_SERVER['REQUEST_URI']);
 $scriptName = $_SERVER['SCRIPT_NAME'];
 
-// Remover el directorio base si existe
-$basePath = dirname($scriptName);
-$basePath = str_replace('\\', '/', $basePath);
-if ($basePath !== '/') {
-    if (strpos($requestUri, $basePath) === 0) {
-        $requestUri = substr($requestUri, strlen($basePath));
+// Remover el directorio base si existe (Solo necesario en XAMPP local)
+// En Vercel, la URL base siempre es la raíz del dominio, por lo que no debemos recortar el path.
+if (!getenv('VERCEL')) {
+    $basePath = dirname($scriptName);
+    $basePath = str_replace('\\', '/', $basePath);
+    if ($basePath !== '/') {
+        if (strpos($requestUri, $basePath) === 0) {
+            $requestUri = substr($requestUri, strlen($basePath));
+        }
     }
 }
 
