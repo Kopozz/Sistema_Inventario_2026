@@ -1,0 +1,4 @@
+/miapp/backups
+/miapp/scripts
+.git
+*.bat

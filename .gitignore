@@ -1,0 +1,12 @@
+# Vercel
+.vercel
+
+# Backups y temporales locales
+/miapp/backups
+/miapp/scripts
+
+# Archivos del OS y editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
