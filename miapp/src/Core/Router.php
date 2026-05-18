@@ -207,6 +207,10 @@ class Router {
             echo "URI original: " . htmlspecialchars($_SERVER['REQUEST_URI']) . "<br>";
             echo "Método: " . htmlspecialchars($_SERVER['REQUEST_METHOD']) . "<br>";
             echo "Cleaned URI: " . htmlspecialchars(parse_url(urldecode($_SERVER['REQUEST_URI']), PHP_URL_PATH)) . "<br>";
+            echo "<br><strong>Rutas Cargadas (" . count($this->routes) . "):</strong><br>";
+            foreach ($this->routes as $r) {
+                echo "- " . $r['method'] . " " . $r['path'] . " -> " . $r['handler'] . "<br>";
+            }
             echo "</div>";
         }
     }
