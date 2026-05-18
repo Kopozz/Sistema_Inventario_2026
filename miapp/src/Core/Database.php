@@ -15,13 +15,18 @@ class Database {
     private $connection;
     
     // Configuración de la base de datos
-    private $host = 'localhost';
-    private $dbname = 'repuestos_vehiculos';
-    private $username = 'root';
-    private $password = '';
+    private $host;
+    private $dbname;
+    private $username;
+    private $password;
     private $charset = 'utf8mb4';
     
     private function __construct() {
+        // Cargar variables de entorno con fallback a local de XAMPP
+        $this->host = getenv('DB_HOST') ?: 'localhost';
+        $this->dbname = getenv('DB_NAME') ?: 'repuestos_vehiculos';
+        $this->username = getenv('DB_USER') ?: 'root';
+        $this->password = getenv('DB_PASSWORD') !== false ? getenv('DB_PASSWORD') : '';
         $this->connect();
     }
     
