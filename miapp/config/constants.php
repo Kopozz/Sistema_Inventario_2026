@@ -15,7 +15,9 @@ define('APP_DEBUG', true); // Cambiar a false en producción
 // Rutas de la aplicación
 // Ajustar BASE_URL dinámicamente según el entorno
 if (isset($_SERVER['HTTP_HOST'])) {
-    $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
+    $isHttps = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || 
+               (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
+    $protocol = $isHttps ? 'https' : 'http';
     $scriptName = $_SERVER['SCRIPT_NAME'];
     $publicPos = strpos($scriptName, '/public/');
     if ($publicPos !== false) {
