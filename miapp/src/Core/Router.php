@@ -110,23 +110,22 @@ class Router {
      */
     public function handleRequest($uri, $method) {
         $method = strtoupper($method);
-        
-        // Debug: mostrar qué se está buscando
-        error_log("Router: Buscando ruta {$method} {$uri}");
+        $trace = "";
         
         // Buscar ruta coincidente
         foreach ($this->routes as $route) {
-            error_log("Router: Comparando con {$route['method']} {$route['path']}");
-            if ($route['method'] === $method && $this->matchRoute($route['path'], $uri)) {
-                error_log("Router: ¡Encontrada! Ejecutando {$route['handler']}");
+            $isMethodMatch = ($route['method'] === $method);
+            $isUriMatch = $this->matchRoute($route['path'], $uri);
+            $trace .= "Probando {$route['method']} {$route['path']} -> MethodMatch: " . ($isMethodMatch ? '1' : '0') . ", UriMatch: " . ($isUriMatch ? '1' : '0') . "<br>";
+            
+            if ($isMethodMatch && $isUriMatch) {
                 $this->executeHandler($route['handler'], $uri);
                 return;
             }
         }
         
         // Si no se encuentra la ruta, mostrar 404
-        error_log("Router: No se encontró ruta para {$method} {$uri}");
-        $this->handle404($uri);
+        $this->handle404($uri, $trace);
     }
     
     /**
@@ -198,13 +197,19 @@ class Router {
     /**
      * Manejar error 404
      */
-    private function handle404($failedUri = '') {
+    private function handle404($failedUri = '', $trace = '') {
         http_response_code(404);
         echo "Página no encontrada - Error 404<br>";
         if (defined('APP_DEBUG') && APP_DEBUG) {
             echo "<div style='font-family: monospace; margin-top: 20px; padding: 15px; background: #f8d7da; color: #721c24; border-radius: 5px;'>";
             echo "<strong>[ALERTA DE ROUTER]</strong><br>";
             echo "URI pasada a handleRequest: <span style='font-size:1.2em;font-weight:bold;color:red;'>" . htmlspecialchars($failedUri) . "</span><br><br>";
+            
+            echo "<strong>[LOOP TRACE]</strong><br>";
+            echo "<div style='max-height: 200px; overflow-y: auto; background: #fff; padding: 10px; border: 1px solid #ccc; font-size: 0.9em;'>";
+            echo $trace;
+            echo "</div><br>";
+            
             echo "URI original: " . htmlspecialchars($_SERVER['REQUEST_URI']) . "<br>";
             echo "Método: " . htmlspecialchars($_SERVER['REQUEST_METHOD']) . "<br>";
             $cleaned = parse_url(urldecode($_SERVER['REQUEST_URI']), PHP_URL_PATH);
@@ -225,11 +230,6 @@ class Router {
             echo "Pattern: " . htmlspecialchars($pattern) . "<br>";
             echo "URI a comparar (failedUri): " . htmlspecialchars($failedUri) . "<br>";
             echo "Resultado preg_match: " . ($res ? "SI MATCHEA (1)" : "NO MATCHEA (0)") . "<br>";
-            
-            echo "<br><strong>Rutas Cargadas (" . count($this->routes) . "):</strong><br>";
-            foreach ($this->routes as $r) {
-                echo "- " . $r['method'] . " " . $r['path'] . " -> " . $r['handler'] . "<br>";
-            }
             echo "</div>";
         }
     }
