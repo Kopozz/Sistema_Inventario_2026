@@ -206,7 +206,25 @@ class Router {
             echo "<strong>[Ruta Debug]</strong><br>";
             echo "URI original: " . htmlspecialchars($_SERVER['REQUEST_URI']) . "<br>";
             echo "Método: " . htmlspecialchars($_SERVER['REQUEST_METHOD']) . "<br>";
-            echo "Cleaned URI: " . htmlspecialchars(parse_url(urldecode($_SERVER['REQUEST_URI']), PHP_URL_PATH)) . "<br>";
+            $cleaned = parse_url(urldecode($_SERVER['REQUEST_URI']), PHP_URL_PATH);
+            $cleaned = rtrim($cleaned, '/');
+            if (empty($cleaned) || $cleaned[0] !== '/') {
+                $cleaned = '/' . $cleaned;
+            }
+            if ($cleaned === '/index.php') {
+                $cleaned = '/';
+            }
+            echo "Cleaned URI: " . htmlspecialchars($cleaned) . "<br>";
+            
+            echo "<br><strong>Análisis de Match para /usuarios/{id}:</strong><br>";
+            $testRoute = '/usuarios/{id}';
+            $pattern = preg_replace('/\{[^}]+\}/', '([^/]+)', $testRoute);
+            $pattern = '#^' . $pattern . '$#';
+            $res = preg_match($pattern, $cleaned);
+            echo "Pattern: " . htmlspecialchars($pattern) . "<br>";
+            echo "URI a comparar: " . htmlspecialchars($cleaned) . "<br>";
+            echo "Resultado preg_match: " . ($res ? "SI MATCHEA (1)" : "NO MATCHEA (0)") . "<br>";
+            
             echo "<br><strong>Rutas Cargadas (" . count($this->routes) . "):</strong><br>";
             foreach ($this->routes as $r) {
                 echo "- " . $r['method'] . " " . $r['path'] . " -> " . $r['handler'] . "<br>";
