@@ -10,3 +10,7 @@
 Thumbs.db
 .vscode/
 .idea/
+
+# Documentos locales
+/miapp/docs/guia_exposicion.md
+
