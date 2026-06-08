@@ -401,12 +401,12 @@
     <!-- Sidebar -->
     <nav class="sidebar position-fixed d-none d-md-block" style="width: 200px;">
         <!-- Header del Sidebar -->
-        <div class="p-3 border-bottom border-secondary text-center">
+        <div class="p-3 border-bottom text-center">
             <div class="mb-2">
-                <img src="<?= BASE_URL ?>logo.jpg" alt="Logo" class="logo-img" style="width: 140px; height: 140px; object-fit: contain; border-radius: 20px; background: rgba(255,255,255,0.1); padding: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.6);">
+                <img src="<?= BASE_URL ?>logo.jpg" alt="Logo" class="logo-img" style="width: 130px; height: 130px; object-fit: contain; border-radius: 8px; border: 1px solid var(--border-subtle); padding: 5px; background: #ffffff;">
             </div>
             <div>
-                <h6 class="text-white mb-1 fw-bold" style="font-size: 0.9rem;"><?= APP_NAME ?></h6>
+                <h6 class="mb-1 fw-bold text-dark" style="font-size: 0.85rem;"><?= APP_NAME ?></h6>
             </div>
         </div>
         

@@ -31,75 +31,76 @@ foreach (($chart_movimientos ?? []) as $fecha => $tipos) {
 </div>
 
 <!-- ─── Métricas Principales ─── -->
+<!-- ─── Métricas Principales ─── -->
 <div class="row g-3 mb-4">
     <div class="col-6 col-md-3">
-        <div class="card border-0 shadow-sm h-100" style="background:linear-gradient(135deg,#4361ee,#3a0ca3)">
-            <div class="card-body text-white">
+        <div class="card h-100">
+            <div class="card-body">
                 <div class="d-flex justify-content-between align-items-start">
                     <div>
-                        <p class="mb-1 small opacity-75 fw-semibold text-uppercase ls-1">Total Repuestos</p>
-                        <h3 class="fw-bold mb-0"><?= number_format($stats['total_repuestos'] ?? 0) ?></h3>
+                        <p class="mb-1 small text-muted fw-semibold text-uppercase">Total Repuestos</p>
+                        <h3 class="fw-bold mb-0 text-dark"><?= number_format($stats['total_repuestos'] ?? 0) ?></h3>
                     </div>
-                    <div class="rounded-circle d-flex align-items-center justify-content-center" style="width:48px;height:48px;background:rgba(255,255,255,0.2)">
-                        <i class="fas fa-cogs fa-lg"></i>
+                    <div class="rounded-circle d-flex align-items-center justify-content-center" style="width:40px;height:40px;background:#f3f4f6;color:var(--color-primary)">
+                        <i class="fas fa-cogs"></i>
                     </div>
                 </div>
-                <p class="mb-0 mt-2 small opacity-75">
-                    <i class="fas fa-arrow-right me-1"></i><a href="<?= BASE_URL ?>repuestos" class="text-white text-decoration-none">Ver catálogo</a>
+                <p class="mb-0 mt-2 small">
+                    <i class="fas fa-arrow-right me-1"></i><a href="<?= BASE_URL ?>repuestos" class="text-decoration-none text-muted">Ver catálogo</a>
                 </p>
             </div>
         </div>
     </div>
     <div class="col-6 col-md-3">
-        <div class="card border-0 shadow-sm h-100" style="background:linear-gradient(135deg,#06d6a0,#0b8a5c)">
-            <div class="card-body text-white">
+        <div class="card h-100">
+            <div class="card-body">
                 <div class="d-flex justify-content-between align-items-start">
                     <div>
-                        <p class="mb-1 small opacity-75 fw-semibold text-uppercase">Ventas del Mes</p>
-                        <h3 class="fw-bold mb-0"><?= number_format($stats['ventas_mes'] ?? 0) ?></h3>
+                        <p class="mb-1 small text-muted fw-semibold text-uppercase">Ventas del Mes</p>
+                        <h3 class="fw-bold mb-0 text-dark"><?= number_format($stats['ventas_mes'] ?? 0) ?></h3>
                     </div>
-                    <div class="rounded-circle d-flex align-items-center justify-content-center" style="width:48px;height:48px;background:rgba(255,255,255,0.2)">
-                        <i class="fas fa-shopping-cart fa-lg"></i>
+                    <div class="rounded-circle d-flex align-items-center justify-content-center" style="width:40px;height:40px;background:#f3f4f6;color:var(--color-success)">
+                        <i class="fas fa-shopping-cart"></i>
                     </div>
                 </div>
-                <p class="mb-0 mt-2 small opacity-75">
-                    <i class="fas fa-arrow-right me-1"></i><a href="<?= BASE_URL ?>ventas" class="text-white text-decoration-none">Ver ventas</a>
+                <p class="mb-0 mt-2 small">
+                    <i class="fas fa-arrow-right me-1"></i><a href="<?= BASE_URL ?>ventas" class="text-decoration-none text-muted">Ver ventas</a>
                 </p>
             </div>
         </div>
     </div>
     <div class="col-6 col-md-3">
-        <div class="card border-0 shadow-sm h-100" style="background:linear-gradient(135deg,#f72585,#b5179e)">
-            <div class="card-body text-white">
+        <div class="card h-100">
+            <div class="card-body">
                 <div class="d-flex justify-content-between align-items-start">
                     <div>
-                        <p class="mb-1 small opacity-75 fw-semibold text-uppercase">Stock Bajo</p>
-                        <h3 class="fw-bold mb-0"><?= number_format($stats['stock_bajo'] ?? 0) ?></h3>
+                        <p class="mb-1 small text-muted fw-semibold text-uppercase">Stock Bajo</p>
+                        <h3 class="fw-bold mb-0 text-dark"><?= number_format($stats['stock_bajo'] ?? 0) ?></h3>
                     </div>
-                    <div class="rounded-circle d-flex align-items-center justify-content-center" style="width:48px;height:48px;background:rgba(255,255,255,0.2)">
-                        <i class="fas fa-exclamation-triangle fa-lg"></i>
+                    <div class="rounded-circle d-flex align-items-center justify-content-center" style="width:40px;height:40px;background:#f3f4f6;color:var(--color-danger)">
+                        <i class="fas fa-exclamation-triangle"></i>
                     </div>
                 </div>
-                <p class="mb-0 mt-2 small opacity-75">
-                    <i class="fas fa-arrow-right me-1"></i><a href="<?= BASE_URL ?>repuestos/stock-bajo" class="text-white text-decoration-none">Ver alertas</a>
+                <p class="mb-0 mt-2 small">
+                    <i class="fas fa-arrow-right me-1"></i><a href="<?= BASE_URL ?>repuestos/stock-bajo" class="text-decoration-none text-muted">Ver alertas</a>
                 </p>
             </div>
         </div>
     </div>
     <div class="col-6 col-md-3">
-        <div class="card border-0 shadow-sm h-100" style="background:linear-gradient(135deg,#4cc9f0,#0077b6)">
-            <div class="card-body text-white">
+        <div class="card h-100">
+            <div class="card-body">
                 <div class="d-flex justify-content-between align-items-start">
                     <div>
-                        <p class="mb-1 small opacity-75 fw-semibold text-uppercase">Usuarios Activos</p>
-                        <h3 class="fw-bold mb-0"><?= number_format($stats['usuarios_activos'] ?? 0) ?></h3>
+                        <p class="mb-1 small text-muted fw-semibold text-uppercase">Usuarios Activos</p>
+                        <h3 class="fw-bold mb-0 text-dark"><?= number_format($stats['usuarios_activos'] ?? 0) ?></h3>
                     </div>
-                    <div class="rounded-circle d-flex align-items-center justify-content-center" style="width:48px;height:48px;background:rgba(255,255,255,0.2)">
-                        <i class="fas fa-users fa-lg"></i>
+                    <div class="rounded-circle d-flex align-items-center justify-content-center" style="width:40px;height:40px;background:#f3f4f6;color:var(--color-accent)">
+                        <i class="fas fa-users"></i>
                     </div>
                 </div>
-                <p class="mb-0 mt-2 small opacity-75">
-                    <i class="fas fa-arrow-right me-1"></i><a href="<?= BASE_URL ?>usuarios" class="text-white text-decoration-none">Gestionar</a>
+                <p class="mb-0 mt-2 small">
+                    <i class="fas fa-arrow-right me-1"></i><a href="<?= BASE_URL ?>usuarios" class="text-decoration-none text-muted">Gestionar</a>
                 </p>
             </div>
         </div>
