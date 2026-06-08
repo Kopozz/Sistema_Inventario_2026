@@ -9,14 +9,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-main: #1a202c;
-            --bg-card: #2d3748;
-            --bg-input: #1e293b;
-            --color-primary: #3b82f6;
-            --color-primary-glow: rgba(59,130,246,0.2);
-            --border-subtle: #4b5563;
-            --text-main: #f3f4f6;
-            --text-muted: #9ca3af;
+            --bg-main: #fbf9f6;
+            --bg-card: #ffffff;
+            --bg-input: #ffffff;
+            --color-primary: #d97706;
+            --color-primary-glow: rgba(217, 119, 6, 0.15);
+            --border-subtle: #e5dcd3;
+            --text-main: #2e2620;
+            --text-muted: #6b5c53;
         }
         * { box-sizing: border-box; }
         body {
@@ -41,14 +41,14 @@
             width: 80px; height: 80px;
             object-fit: contain;
             border-radius: 8px;
-            background: rgba(255,255,255,0.05);
+            background: #ffffff;
             padding: 10px;
             border: 1px solid var(--border-subtle);
             margin-bottom: 0.75rem;
         }
         .brand-name {
             font-size: 1.1rem; font-weight: 700;
-            color: #ffffff; margin: 0;
+            color: var(--text-main); margin: 0;
         }
         .brand-sub {
             font-size: 0.82rem;
@@ -59,9 +59,10 @@
             border: 1px solid var(--border-subtle);
             border-radius: 8px;
             padding: 1.75rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
         .login-card h5 {
-            font-weight: 600; color: #ffffff;
+            font-weight: 600; color: var(--text-main);
             font-size: 1.2rem; margin-bottom: 0.25rem;
         }
         .login-card .subtitle {
@@ -76,7 +77,7 @@
         }
         .form-control {
             background: var(--bg-input) !important;
-            border: 1px solid var(--border-subtle) !important;
+            border: 1px solid #d1d5db !important;
             color: var(--text-main) !important;
             border-radius: 4px; padding: 10px 14px;
             font-size: 0.9rem;
@@ -86,10 +87,10 @@
             box-shadow: 0 0 0 2px var(--color-primary-glow) !important;
             outline: none;
         }
-        .form-control::placeholder { color: #4b5563 !important; }
+        .form-control::placeholder { color: #9ca3af !important; }
         .input-group-text {
-            background: var(--bg-input) !important;
-            border: 1px solid var(--border-subtle) !important;
+            background: #f3f4f6 !important;
+            border: 1px solid #d1d5db !important;
             border-right: none !important;
             color: var(--text-muted) !important;
             border-radius: 4px 0 0 4px;
@@ -112,10 +113,10 @@
             border-color: var(--color-primary-hover);
         }
         .alert-login {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.2);
+            background: #fef2f2;
+            border: 1px solid #fecaca;
             border-left: 3px solid var(--color-danger);
-            border-radius: 4px; color: #f87171;
+            border-radius: 4px; color: #b91c1c;
             font-size: 0.875rem; padding: 10px 14px;
             margin-bottom: 1.25rem;
             display: flex; align-items: center; gap: 8px;

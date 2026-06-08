@@ -10,18 +10,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-main: #1a202c;
-            --bg-sidebar: #111827;
-            --bg-card: #2d3748;
-            --bg-input: #1e293b;
-            --text-main: #f3f4f6;
-            --text-muted: #9ca3af;
-            --color-primary: #3b82f6;
-            --color-primary-hover: #2563eb;
-            --color-accent: #06b6d4;
-            --color-success: #10b981;
-            --color-danger: #ef4444;
-            --border-subtle: #4b5563;
+            --bg-main: #fbf9f6;
+            --bg-sidebar: #f4eae1;
+            --bg-card: #ffffff;
+            --bg-input: #ffffff;
+            --text-main: #2e2620;
+            --text-muted: #6b5c53;
+            --color-primary: #d97706;
+            --color-primary-hover: #b45309;
+            --color-accent: #0891b2;
+            --color-success: #16a34a;
+            --color-danger: #dc2626;
+            --border-subtle: #e5dcd3;
             --font-title: 'system-ui', -apple-system, sans-serif;
             --font-body: 'system-ui', -apple-system, sans-serif;
         }
@@ -36,7 +36,7 @@
 
         h1, h2, h3, h4, h5, h6, .navbar-brand {
             font-family: var(--font-title);
-            color: #ffffff !important;
+            color: var(--text-main) !important;
             font-weight: 600;
         }
 
@@ -71,8 +71,8 @@
         }
 
         .sidebar .nav-link:hover { 
-            color: #ffffff !important; 
-            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--text-main) !important; 
+            background-color: rgba(0, 0, 0, 0.04);
         }
 
         .sidebar .nav-link:hover i {
@@ -80,10 +80,10 @@
         }
 
         .sidebar .nav-link.active { 
-            color: #ffffff !important; 
-            background: rgba(59, 130, 246, 0.15) !important;
+            color: var(--color-primary) !important; 
+            background: rgba(217, 119, 6, 0.1) !important;
             border-left: 3px solid var(--color-primary) !important;
-            font-weight: 500;
+            font-weight: 600;
         }
 
         .sidebar .nav-link.active i {
@@ -97,13 +97,18 @@
 
         .logo-img {
             border: 1px solid var(--border-subtle);
+            background: #ffffff !important;
         }
 
         /* Footer del Sidebar */
         .sidebar-footer {
             border-top: 1px solid var(--border-subtle) !important;
-            background-color: rgba(0, 0, 0, 0.1);
+            background-color: rgba(0, 0, 0, 0.03);
             flex-shrink: 0;
+        }
+
+        .sidebar-footer a {
+            color: var(--text-main) !important;
         }
 
         .sidebar-footer .dropdown-toggle::after {
@@ -144,16 +149,18 @@
             border: 1px solid var(--border-subtle) !important;
             border-radius: 6px !important;
             overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;
         }
 
         .card-header {
-            background-color: rgba(0, 0, 0, 0.1) !important;
+            background-color: rgba(0, 0, 0, 0.02) !important;
             border-bottom: 1px solid var(--border-subtle) !important;
             padding: 12px 16px !important;
         }
 
         .card-body {
             padding: 16px !important;
+            color: var(--text-main) !important;
         }
 
         /* Inputs de formularios */
@@ -169,19 +176,19 @@
 
         .form-control:focus, .form-select:focus {
             border-color: var(--color-primary) !important;
-            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25) !important;
+            box-shadow: 0 0 0 2px rgba(217, 119, 6, 0.2) !important;
             outline: 0;
         }
 
         .form-control::placeholder {
             color: var(--text-muted) !important;
-            opacity: 0.5;
+            opacity: 0.6;
         }
 
         .form-label {
             color: var(--text-muted);
-            font-weight: 500;
-            font-size: 0.85rem;
+            font-weight: 600;
+            font-size: 0.825rem;
             margin-bottom: 4px;
             text-transform: uppercase;
         }
@@ -213,8 +220,8 @@
         }
 
         .btn-success:hover {
-            background-color: #059669 !important;
-            border-color: #059669 !important;
+            background-color: #15803d !important;
+            border-color: #15803d !important;
         }
 
         .btn-danger {
@@ -224,8 +231,8 @@
         }
 
         .btn-danger:hover {
-            background-color: #dc2626 !important;
-            border-color: #dc2626 !important;
+            background-color: #b91c1c !important;
+            border-color: #b91c1c !important;
         }
 
         .btn-outline-secondary {
@@ -235,8 +242,8 @@
         }
 
         .btn-outline-secondary:hover {
-            background-color: rgba(255, 255, 255, 0.05) !important;
-            color: #ffffff !important;
+            background-color: rgba(0, 0, 0, 0.05) !important;
+            color: var(--text-main) !important;
         }
 
         /* Tablas */
@@ -251,7 +258,7 @@
         }
 
         .table-light {
-            background-color: rgba(0, 0, 0, 0.15) !important;
+            background-color: rgba(0, 0, 0, 0.04) !important;
         }
 
         .table-light th {
@@ -263,7 +270,7 @@
         }
 
         .table-hover tbody tr:hover {
-            background-color: rgba(255, 255, 255, 0.03) !important;
+            background-color: rgba(0, 0, 0, 0.02) !important;
         }
 
         /* Alertas */
@@ -276,10 +283,14 @@
 
         .alert-success {
             border-left: 3px solid var(--color-success) !important;
+            background-color: #f0fdf4 !important;
+            color: #166534 !important;
         }
 
         .alert-danger {
             border-left: 3px solid var(--color-danger) !important;
+            background-color: #fef2f2 !important;
+            color: #991b1b !important;
         }
 
         /* Badges */
@@ -291,27 +302,27 @@
         }
 
         .bg-success {
-            background-color: rgba(16, 185, 129, 0.1) !important;
-            color: #34d399 !important;
-            border: 1px solid rgba(16, 185, 129, 0.2) !important;
+            background-color: #dcfce7 !important;
+            color: #15803d !important;
+            border: 1px solid #bbf7d0 !important;
         }
 
         .bg-danger {
-            background-color: rgba(239, 68, 68, 0.1) !important;
-            color: #f87171 !important;
-            border: 1px solid rgba(239, 68, 68, 0.2) !important;
+            background-color: #fee2e2 !important;
+            color: #b91c1c !important;
+            border: 1px solid #fecaca !important;
         }
 
         .bg-info {
-            background-color: rgba(6, 182, 212, 0.1) !important;
-            color: #22d3ee !important;
-            border: 1px solid rgba(6, 182, 212, 0.2) !important;
+            background-color: #ecfeff !important;
+            color: #0891b2 !important;
+            border: 1px solid #cffafe !important;
         }
 
         .bg-warning {
-            background-color: rgba(245, 158, 11, 0.1) !important;
-            color: #fbbf24 !important;
-            border: 1px solid rgba(245, 158, 11, 0.2) !important;
+            background-color: #fef3c7 !important;
+            color: #b45309 !important;
+            border: 1px solid #fde68a !important;
         }
 
         /* Dashboard metrics cards */
@@ -335,10 +346,10 @@
             color: var(--text-muted) !important;
         }
         .row.g-3.mb-4 .card-body a:hover {
-            color: #ffffff !important;
+            color: var(--text-main) !important;
         }
         .row.g-3.mb-4 .rounded-circle {
-            background: rgba(255, 255, 255, 0.02) !important;
+            background: rgba(0, 0, 0, 0.02) !important;
             border: 1px solid var(--border-subtle) !important;
         }
         .row.g-3.mb-4 div:nth-child(1) .rounded-circle i { color: var(--color-primary) !important; }
@@ -354,8 +365,8 @@
         }
 
         .page-link:hover {
-            background-color: rgba(255, 255, 255, 0.05) !important;
-            color: #ffffff !important;
+            background-color: rgba(0, 0, 0, 0.02) !important;
+            color: var(--text-main) !important;
         }
 
         .page-item.active .page-link {
@@ -365,7 +376,7 @@
         }
 
         /* Dropdown */
-        .dropdown-menu-dark {
+        .dropdown-menu {
             background-color: var(--bg-card) !important;
             border: 1px solid var(--border-subtle) !important;
         }
@@ -375,8 +386,8 @@
         }
 
         .dropdown-item:hover {
-            background-color: rgba(255, 255, 255, 0.05) !important;
-            color: #ffffff !important;
+            background-color: rgba(0, 0, 0, 0.04) !important;
+            color: var(--text-main) !important;
         }
 
         #switch-currency-pen.active, #switch-currency-usd.active {
@@ -459,13 +470,13 @@
         </div>
         
         <!-- Footer del Sidebar -->
-        <div class="sidebar-footer border-top border-secondary p-2">
+        <div class="sidebar-footer border-top p-2">
             <div class="dropdown text-center">
-                <a class="nav-link dropdown-toggle text-white py-2" href="#" role="button" data-bs-toggle="dropdown">
+                <a class="nav-link dropdown-toggle text-dark py-2" href="#" role="button" data-bs-toggle="dropdown">
                     <i class="fas fa-user-circle me-1" style="font-size: 1.2em;"></i>
                     <span class="small"><?= $_SESSION['user_name'] ?? 'Usuario' ?></span>
                 </a>
-                <ul class="dropdown-menu dropdown-menu-dark">
+                <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="<?= BASE_URL ?>usuarios/<?= $_SESSION['user_id'] ?? '' ?>"><i class="fas fa-user me-2"></i>Mi Perfil</a></li>
                     <li><a class="dropdown-item" href="<?= BASE_URL ?>usuarios/<?= $_SESSION['user_id'] ?? '' ?>/cambiar-password"><i class="fas fa-key me-2"></i>Cambiar Contraseña</a></li>
                     <li><hr class="dropdown-divider"></li>
@@ -490,8 +501,8 @@
                     <span class="navbar-brand mb-0 h1"><?= $title ?? 'Sistema de Repuestos' ?></span>
                     
                     <div class="ms-auto d-flex align-items-center">
-                        <div class="btn-group border border-secondary p-1 rounded-3" style="background-color: var(--bg-sidebar); display: flex; gap: 4px;">
-                            <button type="button" class="btn btn-sm px-3 py-1 border-0 rounded-2 text-white fw-bold active" id="switch-currency-pen" onclick="setCurrency('PEN')" style="font-size: 0.75rem; transition: all 0.2s ease;">S/ PEN</button>
+                        <div class="btn-group border p-1 rounded-3" style="background-color: var(--bg-sidebar); display: flex; gap: 4px;">
+                            <button type="button" class="btn btn-sm px-3 py-1 border-0 rounded-2 text-dark fw-bold active" id="switch-currency-pen" onclick="setCurrency('PEN')" style="font-size: 0.75rem; transition: all 0.2s ease;">S/ PEN</button>
                             <button type="button" class="btn btn-sm px-3 py-1 border-0 rounded-2 text-muted fw-bold" id="switch-currency-usd" onclick="setCurrency('USD')" style="font-size: 0.75rem; transition: all 0.2s ease;">$ USD</button>
                         </div>
                     </div>
