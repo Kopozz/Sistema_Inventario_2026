@@ -394,9 +394,51 @@
             background-color: var(--color-primary) !important;
             color: #ffffff !important;
         }
+
+        /* --- Animaciones y Transiciones --- */
+        .btn, .nav-link, .form-control, .form-select, .card {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .fade-in-up-page {
+            animation: fadeInUp 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Spinner minimalista */
+        .spinner-min {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            border-top-color: currentColor;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            display: inline-block;
+            vertical-align: middle;
+        }
     </style>
 </head>
 <body>
+    <!-- Global Loader (Top Progress Bar + Minimalist center spinner) -->
+    <div id="global-progress-bar" style="position: fixed; top: 0; left: 0; height: 3px; background-color: var(--color-primary); z-index: 99999; width: 0; transition: width 0.3s ease, opacity 0.3s ease; opacity: 1;"></div>
+    <div id="global-spinner-overlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(251, 249, 246, 0.7); display: flex; align-items: center; justify-content: center; z-index: 99998; opacity: 1; transition: opacity 0.25s ease;">
+        <div class="spinner-min" style="width: 24px; height: 24px; border: 2px solid rgba(0,0,0,0.06); border-top-color: var(--color-primary); border-radius: 50%; animation: spin 0.6s linear infinite;"></div>
+    </div>
+
     <?php if (isset($_SESSION['user_id'])): ?>
     <!-- Sidebar -->
     <nav class="sidebar position-fixed d-none d-md-block" style="width: 200px;">
@@ -512,7 +554,7 @@
         <?php endif; ?>
 
         <!-- Content -->
-        <div class="container-fluid p-4">
+        <div class="container-fluid p-4 fade-in-up-page">
             <?php if (isset($success) && $success): ?>
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 <?= htmlspecialchars($success) ?>
@@ -647,6 +689,46 @@
                 setTimeout(() => { observerActive = true; }, 10);
             });
             observer.observe(document.body, { childList: true, subtree: true });
+
+            // Sincronizar loaders global y central
+            const progressBar = document.getElementById('global-progress-bar');
+            const spinnerOverlay = document.getElementById('global-spinner-overlay');
+            if (progressBar && spinnerOverlay) {
+                progressBar.style.width = '100%';
+                setTimeout(() => {
+                    spinnerOverlay.style.opacity = '0';
+                    progressBar.style.opacity = '0';
+                    setTimeout(() => {
+                        spinnerOverlay.style.display = 'none';
+                        progressBar.style.display = 'none';
+                    }, 250);
+                }, 200);
+            }
+
+            // Loader por componente: spinner en botones de enviar al enviar formulario
+            document.querySelectorAll('form').forEach(form => {
+                form.addEventListener('submit', function() {
+                    const btn = this.querySelector('button[type="submit"]');
+                    if (btn) {
+                        btn.disabled = true;
+                        btn.innerHTML = `<span class="spinner-min me-2" style="width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.2); border-top-color: #ffffff; border-radius: 50%; animation: spin 0.6s linear infinite; display: inline-block;"></span>Procesando...`;
+                    }
+                });
+            });
+        });
+
+        // Activar loaders en transicion de pagina
+        window.addEventListener('beforeunload', () => {
+            const progressBar = document.getElementById('global-progress-bar');
+            const spinnerOverlay = document.getElementById('global-spinner-overlay');
+            if (progressBar && spinnerOverlay) {
+                spinnerOverlay.style.display = 'flex';
+                progressBar.style.display = 'block';
+                spinnerOverlay.style.opacity = '1';
+                progressBar.style.opacity = '1';
+                progressBar.style.width = '0%';
+                setTimeout(() => { progressBar.style.width = '70%'; }, 10);
+            }
         });
     </script>
 </body>
