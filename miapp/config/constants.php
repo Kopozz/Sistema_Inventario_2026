@@ -10,7 +10,7 @@ date_default_timezone_set('America/Lima');
 // Configuración de la aplicación
 define('APP_NAME', 'Sistema de Repuestos de Vehículos');
 define('APP_VERSION', '1.0.0');
-define('APP_DEBUG', true); // Cambiar a false en producción
+define('APP_DEBUG', getenv('VERCEL') ? false : true); // false en producción automáticamente
 
 // Rutas de la aplicación
 // Ajustar BASE_URL dinámicamente según el entorno
@@ -62,9 +62,12 @@ define('CATEGORIAS_REPUESTOS', [
 ]);
 
 // Estados de venta (normalizados en mayúsculas en el modelo)
+// NOTA: El schema SQL define el ENUM como 'pendiente','completada','cancelada'
+// MySQL compara case-insensitively en ENUM por defecto, pero se recomienda mantener
+// los valores en minúscula si se migra el schema. Por ahora el código usa mayúsculas.
 define('VENTA_PENDIENTE', 'PENDIENTE');
 define('VENTA_COMPLETADA', 'COMPLETADA');
-define('VENTA_ANULADA', 'ANULADA');
+define('VENTA_ANULADA', 'ANULADA'); // En BD el ENUM acepta 'cancelada'; migrar o usar este valor
 
 // Tipos de movimiento de inventario
 define('MOVIMIENTO_ENTRADA', 'entrada');

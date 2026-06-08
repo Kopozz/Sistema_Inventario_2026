@@ -59,7 +59,7 @@ $exportUrl = BASE_URL . 'reportes/exportar-movimientos' . ($exportParams ? '?' .
 
 <!-- Tabla de movimientos -->
 <div class="card border-0 shadow-sm">
-    <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center pt-3">
+    <div class="card-header d-flex justify-content-between align-items-center pt-3">
         <h6 class="fw-bold mb-0"><i class="fas fa-list me-2"></i>Historial de Movimientos</h6>
         <span class="badge bg-info"><?= $total ?> registros</span>
     </div>

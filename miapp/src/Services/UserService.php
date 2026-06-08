@@ -227,11 +227,20 @@ class UserService {
         // Definir permisos por rol
         $permissions = [
             ROLE_EMPLOYEE => [
-                'view_users', 'view_repuestos', 'view_inventario', 
-                'view_ventas', 'create_ventas', 'view_reportes'
+                // Usuarios: solo ver, no crear/editar/eliminar
+                'view_users',
+                // Repuestos: ver y buscar
+                'view_repuestos',
+                // Inventario: ver y registrar movimientos
+                'view_inventario', 'create_inventario',
+                // Ventas: ver y crear, pero no anular
+                'view_ventas', 'create_ventas',
+                // Reportes: solo ver
+                'view_reportes',
             ],
             ROLE_ADMIN => [
-                'all' // Todos los permisos
+                'all' // Todos los permisos (incluyendo create_users, edit_users, delete_users,
+                      // create_repuestos, edit_repuestos, delete_repuestos, anular_ventas, etc.)
             ]
         ];
         

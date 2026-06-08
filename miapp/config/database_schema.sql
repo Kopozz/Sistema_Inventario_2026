@@ -1,9 +1,9 @@
 -- Esquema de Base de Datos - Sistema de Repuestos de Vehículos
--- Crear base de datos
-CREATE DATABASE IF NOT EXISTS repuestos_vehiculos 
-CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+-- Crear base de datos (Comentado para compatibilidad con hosting en la nube como Alwaysdata)
+-- CREATE DATABASE IF NOT EXISTS repuestos_vehiculos 
+-- CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
-USE repuestos_vehiculos;
+-- USE repuestos_vehiculos;
 
 -- Tabla de usuarios (RF1-RF3)
 CREATE TABLE usuarios (
@@ -83,7 +83,7 @@ CREATE TABLE ventas (
     subtotal DECIMAL(10,2) NOT NULL,
     descuento DECIMAL(10,2) DEFAULT 0,
     total DECIMAL(10,2) NOT NULL,
-    estado ENUM('pendiente', 'completada', 'cancelada') DEFAULT 'pendiente',
+    estado ENUM('PENDIENTE', 'COMPLETADA', 'ANULADA') DEFAULT 'PENDIENTE',
     usuario_id INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

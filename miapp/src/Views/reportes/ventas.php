@@ -50,7 +50,7 @@ $exportUrl = BASE_URL . 'reportes/exportar-ventas'
     <!-- Resumen Diario -->
     <div class="col-lg-7">
         <div class="card border-0 shadow-sm h-100">
-            <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center pt-3">
+            <div class="card-header d-flex justify-content-between align-items-center pt-3">
                 <h6 class="fw-bold mb-0"><i class="fas fa-calendar-day me-2 text-primary"></i>Resumen Diario</h6>
                 <span class="badge bg-primary"><?= count($resumenDiario) ?> días</span>
             </div>
@@ -88,7 +88,7 @@ $exportUrl = BASE_URL . 'reportes/exportar-ventas'
     <!-- Resumen Semanal -->
     <div class="col-lg-5">
         <div class="card border-0 shadow-sm h-100">
-            <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center pt-3">
+            <div class="card-header d-flex justify-content-between align-items-center pt-3">
                 <h6 class="fw-bold mb-0"><i class="fas fa-calendar-week me-2 text-secondary"></i>Resumen Semanal</h6>
                 <span class="badge bg-secondary">Últimas semanas</span>
             </div>

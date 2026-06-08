@@ -111,7 +111,7 @@ foreach (($chart_movimientos ?? []) as $fecha => $tipos) {
     <!-- Doughnut: Repuestos por Categoría -->
     <div class="col-md-5">
         <div class="card border-0 shadow-sm h-100">
-            <div class="card-header bg-white border-0 pt-3 pb-0">
+            <div class="card-header pt-3 pb-0">
                 <h6 class="fw-bold mb-0"><i class="fas fa-chart-pie me-2 text-primary"></i>Repuestos por Categoría</h6>
                 <small class="text-muted">Distribución actual del inventario</small>
             </div>
@@ -132,7 +132,7 @@ foreach (($chart_movimientos ?? []) as $fecha => $tipos) {
     <!-- Barras: Tendencia Movimientos 7 días -->
     <div class="col-md-7">
         <div class="card border-0 shadow-sm h-100">
-            <div class="card-header bg-white border-0 pt-3 pb-0">
+            <div class="card-header pt-3 pb-0">
                 <h6 class="fw-bold mb-0"><i class="fas fa-chart-bar me-2 text-success"></i>Movimientos — Últimos 7 días</h6>
                 <small class="text-muted">Entradas, salidas y ajustes de inventario</small>
             </div>

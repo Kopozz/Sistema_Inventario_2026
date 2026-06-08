@@ -436,46 +436,57 @@
         </div>
         
         <!-- Menu del Sidebar -->
+        <?php
+        // Detectar sección activa para resaltar el ítem del menú
+        $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        function sidebarActive(string $segment, string $currentPath): string {
+            $path = rtrim($currentPath, '/');
+            if ($segment === 'dashboard') {
+                return (str_contains($path, '/dashboard') || $path === '' || $path === '/') ? 'active' : '';
+            }
+            return str_contains($path, '/' . $segment) ? 'active' : '';
+        }
+        ?>
         <div class="sidebar-menu">
             <ul class="nav nav-pills flex-column px-2 py-2">
                 <li class="nav-item mb-1">
-                    <a class="nav-link text-center py-2 rounded" href="<?= BASE_URL ?>dashboard">
+                    <a class="nav-link text-center py-2 rounded <?= sidebarActive('dashboard', $currentPath) ?>" href="<?= BASE_URL ?>dashboard">
                         <i class="fas fa-tachometer-alt d-block mb-1" style="font-size: 1.1em;"></i>
                         <span class="small">Dashboard</span>
                     </a>
                 </li>
                 <li class="nav-item mb-1">
-                    <a class="nav-link text-center py-2 rounded" href="<?= BASE_URL ?>usuarios">
+                    <a class="nav-link text-center py-2 rounded <?= sidebarActive('usuarios', $currentPath) ?>" href="<?= BASE_URL ?>usuarios">
                         <i class="fas fa-users d-block mb-1" style="font-size: 1.1em;"></i>
                         <span class="small">Usuarios</span>
                     </a>
                 </li>
                 <li class="nav-item mb-1">
-                    <a class="nav-link text-center py-2 rounded" href="<?= BASE_URL ?>repuestos">
+                    <a class="nav-link text-center py-2 rounded <?= sidebarActive('repuestos', $currentPath) ?>" href="<?= BASE_URL ?>repuestos">
                         <i class="fas fa-cogs d-block mb-1" style="font-size: 1.1em;"></i>
                         <span class="small">Repuestos</span>
                     </a>
                 </li>
                 <li class="nav-item mb-1">
-                    <a class="nav-link text-center py-2 rounded" href="<?= BASE_URL ?>inventario">
+                    <a class="nav-link text-center py-2 rounded <?= sidebarActive('inventario', $currentPath) ?>" href="<?= BASE_URL ?>inventario">
                         <i class="fas fa-boxes d-block mb-1" style="font-size: 1.1em;"></i>
                         <span class="small">Inventario</span>
                     </a>
                 </li>
                 <li class="nav-item mb-1">
-                    <a class="nav-link text-center py-2 rounded" href="<?= BASE_URL ?>proveedores">
+                    <a class="nav-link text-center py-2 rounded <?= sidebarActive('proveedores', $currentPath) ?>" href="<?= BASE_URL ?>proveedores">
                         <i class="fas fa-truck d-block mb-1" style="font-size: 1.1em;"></i>
                         <span class="small">Proveedores</span>
                     </a>
                 </li>
                 <li class="nav-item mb-1">
-                    <a class="nav-link text-center py-2 rounded" href="<?= BASE_URL ?>ventas">
+                    <a class="nav-link text-center py-2 rounded <?= sidebarActive('ventas', $currentPath) ?>" href="<?= BASE_URL ?>ventas">
                         <i class="fas fa-shopping-cart d-block mb-1" style="font-size: 1.1em;"></i>
                         <span class="small">Ventas</span>
                     </a>
                 </li>
                 <li class="nav-item mb-1">
-                    <a class="nav-link text-center py-2 rounded" href="<?= BASE_URL ?>reportes">
+                    <a class="nav-link text-center py-2 rounded <?= sidebarActive('reportes', $currentPath) ?>" href="<?= BASE_URL ?>reportes">
                         <i class="fas fa-chart-bar d-block mb-1" style="font-size: 1.1em;"></i>
                         <span class="small">Reportes</span>
                     </a>
