@@ -181,7 +181,14 @@ $content = ob_start();
                 <?php if ($repuesto->getImagen()): ?>
                     <?php 
                     $imgPath = $repuesto->getImagen();
-                    $imgUrl = (strpos($imgPath, 'data:') === 0) ? $imgPath : BASE_URL . $imgPath;
+                    $imgUrl = '';
+                    if (strpos($imgPath, 'data:') === 0) {
+                        $imgUrl = $imgPath;
+                    } elseif (strlen($imgPath) > 200 && !preg_match('/^https?:\/\//', $imgPath)) {
+                        $imgUrl = 'data:image/jpeg;base64,' . $imgPath;
+                    } else {
+                        $imgUrl = BASE_URL . ltrim($imgPath, '/');
+                    }
                     ?>
                     <div style="background:#111; border-radius:8px; overflow:hidden; min-height:200px; display:flex; align-items:center; justify-content:center; cursor:zoom-in;" onclick="openLightbox()">
                         <img src="<?= $imgUrl ?>" 
@@ -313,13 +320,53 @@ $content = ob_start();
 <?php endif; ?>
 
 <script>
-function openLightbox() {
-    new bootstrap.Modal(document.getElementById('lightboxModal')).show();
+document.addEventListener('DOMContentLoaded', function() {
+    document.body.appendChild(document.getElementById('deleteModal'));
+    const lbModal = document.getElementById('lightboxModal');
+    if (lbModal) document.body.appendChild(lbModal);
+});
+
+let _lightboxModalInstance = null;
+let _deleteModalInstance = null;
+
+function getLightboxModal() {
+    const el = document.getElementById('lightboxModal');
+    if (!el) return null;
+    if (!_lightboxModalInstance) {
+        _lightboxModalInstance = new bootstrap.Modal(el, { backdrop: true, keyboard: true });
+        el.addEventListener('hidden.bs.modal', function () {
+            document.body.classList.remove('modal-open');
+            document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
+        });
+    }
+    return _lightboxModalInstance;
 }
+
+function getDeleteModal() {
+    const el = document.getElementById('deleteModal');
+    if (!_deleteModalInstance) {
+        _deleteModalInstance = new bootstrap.Modal(el, { backdrop: true, keyboard: true });
+        el.addEventListener('hidden.bs.modal', function () {
+            document.body.classList.remove('modal-open');
+            document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
+        });
+    }
+    return _deleteModalInstance;
+}
+
+function openLightbox() {
+    document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
+    document.body.classList.remove('modal-open');
+    const m = getLightboxModal();
+    if(m) m.show();
+}
+
 function confirmDelete(repuestoId, repuestoName) {
+    document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
+    document.body.classList.remove('modal-open');
     document.getElementById('repuestoName').textContent = repuestoName;
-    document.getElementById('deleteForm').action = '<?= BASE_URL ?>repuestos/' + repuestoId;
-    new bootstrap.Modal(document.getElementById('deleteModal')).show();
+    document.getElementById('deleteForm').action = '<?= BASE_URL ?>repuestos/' + repuestoId + '/eliminar';
+    getDeleteModal().show();
 }
 </script>
 

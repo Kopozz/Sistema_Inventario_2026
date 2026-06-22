@@ -167,7 +167,18 @@ $content = ob_start();
                     <?php foreach ($repuestos as $repuesto): ?>
                     <?php 
                     $imgPath = $repuesto->getImagen();
-                    $imgUrl  = $imgPath ? ((strpos($imgPath, 'data:') === 0) ? $imgPath : BASE_URL . $imgPath) : '';
+                    $imgUrl = '';
+                    if ($imgPath) {
+                        if (strpos($imgPath, 'data:') === 0) {
+                            $imgUrl = $imgPath;
+                        } elseif (strlen($imgPath) > 200 && !preg_match('/^https?:\/\//', $imgPath)) {
+                            // Raw base64 string from previous uploads without data: prefix
+                            $imgUrl = 'data:image/jpeg;base64,' . $imgPath;
+                        } else {
+                            $imgUrl = BASE_URL . ltrim($imgPath, '/');
+                        }
+                    }
+
                     $nombreEnc = htmlspecialchars($repuesto->getNombre());
                     $codigoEnc = htmlspecialchars($repuesto->getCodigo());
                     $catEnc    = htmlspecialchars($repuesto->getCategoria());
@@ -433,6 +444,12 @@ $content = ob_start();
 
 <script>
 const BASE_URL = '<?= BASE_URL ?>';
+
+// Mover los modales al <body> para evitar conflictos de z-index u overflow de Bootstrap
+document.addEventListener('DOMContentLoaded', function() {
+    document.body.appendChild(document.getElementById('previewModal'));
+    document.body.appendChild(document.getElementById('deleteModal'));
+});
 
 // ── Singleton Modal instances ────────────────────────────────────────────────
 let _previewModalInstance = null;

@@ -158,7 +158,14 @@ $content = ob_start();
                                     <div class="mb-3">
                                         <?php 
                                         $imgPath = $repuesto->getImagen();
-                                        $imgUrl = (strpos($imgPath, 'data:') === 0) ? $imgPath : BASE_URL . $imgPath;
+                                        $imgUrl = '';
+                                        if (strpos($imgPath, 'data:') === 0) {
+                                            $imgUrl = $imgPath;
+                                        } elseif (strlen($imgPath) > 200 && !preg_match('/^https?:\/\//', $imgPath)) {
+                                            $imgUrl = 'data:image/jpeg;base64,' . $imgPath;
+                                        } else {
+                                            $imgUrl = BASE_URL . ltrim($imgPath, '/');
+                                        }
                                         ?>
                                         <p class="text-muted mb-1" style="font-size:0.85rem;"><i class="fas fa-image me-1"></i>Imagen actual:</p>
                                         <div style="width:160px; height:160px; background:#111; border-radius:10px; overflow:hidden; display:flex; align-items:center; justify-content:center;">
