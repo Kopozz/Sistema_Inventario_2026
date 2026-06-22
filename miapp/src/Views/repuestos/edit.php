@@ -155,20 +155,32 @@ $content = ob_start();
                                     <i class="fas fa-image me-2"></i>Imagen del Repuesto
                                 </label>
                                 <?php if ($repuesto->getImagen()): ?>
-                                    <div class="mb-2">
+                                    <div class="mb-3">
                                         <?php 
                                         $imgPath = $repuesto->getImagen();
                                         $imgUrl = (strpos($imgPath, 'data:') === 0) ? $imgPath : BASE_URL . $imgPath;
                                         ?>
-                                        <img src="<?= $imgUrl ?>" alt="Imagen actual" class="img-thumbnail" style="max-height: 150px; object-fit: contain;">
-                                        <div class="form-text text-muted">Imagen actual del producto. Subir una nueva reemplazará la anterior.</div>
+                                        <p class="text-muted mb-1" style="font-size:0.85rem;"><i class="fas fa-image me-1"></i>Imagen actual:</p>
+                                        <div style="width:160px; height:160px; background:#111; border-radius:10px; overflow:hidden; display:flex; align-items:center; justify-content:center;">
+                                            <img src="<?= $imgUrl ?>" alt="Imagen actual" style="max-width:100%; max-height:160px; object-fit:contain; display:block;">
+                                        </div>
+                                        <div class="form-text text-warning mt-1"><i class="fas fa-info-circle me-1"></i>Subir una nueva imagen reemplazará la anterior.</div>
                                     </div>
                                 <?php endif; ?>
-                                <input type="file" class="form-control" id="imagen_file" accept="image/*">
+                                <input type="file" class="form-control" id="imagen_file" accept="image/jpeg,image/png,image/webp,image/gif,image/bmp,image/*">
                                 <input type="hidden" id="imagen_base64" name="imagen_base64">
-                                <div class="form-text">Seleccione una nueva imagen para el producto (Se comprimirá automáticamente en el navegador)</div>
-                                <div class="mt-2 d-none" id="preview_container">
-                                    <img id="image_preview" src="" alt="Vista previa" class="img-thumbnail" style="max-height: 150px; object-fit: contain;">
+                                <div class="form-text">Acepta JPG, PNG, WebP, BMP, GIF. Se adaptará y optimizará automáticamente (máx. 1200×1200 px).</div>
+                                <div class="mt-3 d-none" id="preview_container">
+                                    <div class="row align-items-center">
+                                        <div class="col-auto">
+                                            <div style="width:160px; height:160px; background:#111; border-radius:10px; overflow:hidden; display:flex; align-items:center; justify-content:center;">
+                                                <img id="image_preview" src="" alt="Vista previa" style="max-width:100%; max-height:160px; object-fit:contain; display:block;">
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div id="img_info" class="text-muted" style="font-size:0.85rem;"></div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -189,7 +201,7 @@ $content = ob_start();
 </div>
 
 <script>
-// Manejar compresión de imagen en el cliente
+// Compresión inteligente de imagen — acepta cualquier dimensión y aspecto
 document.getElementById('imagen_file').addEventListener('change', function(e) {
     const file = e.target.files[0];
     if (!file) return;
@@ -198,37 +210,41 @@ document.getElementById('imagen_file').addEventListener('change', function(e) {
     reader.onload = function(event) {
         const img = new Image();
         img.onload = function() {
-            const canvas = document.createElement('canvas');
-            const MAX_WIDTH = 800;
-            const MAX_HEIGHT = 800;
-            let width = img.width;
-            let height = img.height;
+            const MAX_DIM = 1200;
+            let w = img.width;
+            let h = img.height;
 
-            if (width > height) {
-                if (width > MAX_WIDTH) {
-                    height *= MAX_WIDTH / width;
-                    width = MAX_WIDTH;
-                }
-            } else {
-                if (height > MAX_HEIGHT) {
-                    width *= MAX_HEIGHT / height;
-                    height = MAX_HEIGHT;
+            if (w > MAX_DIM || h > MAX_DIM) {
+                if (w >= h) {
+                    h = Math.round(h * MAX_DIM / w);
+                    w = MAX_DIM;
+                } else {
+                    w = Math.round(w * MAX_DIM / h);
+                    h = MAX_DIM;
                 }
             }
 
-            canvas.width = width;
-            canvas.height = height;
+            const canvas = document.createElement('canvas');
+            canvas.width  = w;
+            canvas.height = h;
             const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0, width, height);
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, w, h);
+            ctx.drawImage(img, 0, 0, w, h);
 
-            // Comprimir a JPEG con calidad de 0.7
-            const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+            const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
             document.getElementById('imagen_base64').value = dataUrl;
-            
-            // Mostrar vista previa de la nueva imagen
-            const preview = document.getElementById('image_preview');
-            preview.src = dataUrl;
+
+            document.getElementById('image_preview').src = dataUrl;
             document.getElementById('preview_container').classList.remove('d-none');
+
+            const kb = Math.round(dataUrl.length * 0.75 / 1024);
+            document.getElementById('img_info').innerHTML =
+                `<i class="fas fa-check-circle text-success me-1"></i>
+                <strong>Nueva imagen procesada</strong><br>
+                Dimensiones: ${w} × ${h} px<br>
+                Tamaño aprox.: <strong>${kb} KB</strong><br>
+                <span class="text-muted">Original: ${img.width} × ${img.height} px</span>`;
         };
         img.src = event.target.result;
     };

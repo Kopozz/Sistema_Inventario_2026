@@ -2,6 +2,88 @@
 $content = ob_start(); 
 ?>
 
+<style>
+/* ── Repuesto thumbnail clickable ── */
+.repuesto-thumb {
+    width: 72px;
+    height: 72px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 2px solid var(--border-subtle, #e0e0e0);
+    cursor: pointer;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+    display: block;
+}
+.repuesto-thumb:hover {
+    transform: scale(1.08);
+    box-shadow: 0 4px 18px rgba(0,0,0,0.18);
+}
+.no-img-thumb {
+    width: 72px;
+    height: 72px;
+    border-radius: 10px;
+    border: 2px dashed var(--border-subtle, #ccc);
+    background: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #aaa;
+    font-size: 1.6rem;
+}
+
+/* ── Preview Modal ── */
+#previewModal .modal-dialog {
+    max-width: 820px;
+}
+#previewModal .modal-body {
+    padding: 0;
+}
+.preview-img-wrap {
+    background: #111;
+    border-radius: 0 0 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 280px;
+    max-height: 420px;
+    overflow: hidden;
+}
+.preview-img-wrap img {
+    max-width: 100%;
+    max-height: 420px;
+    object-fit: contain;
+    border-radius: 0;
+}
+.preview-specs {
+    padding: 1.4rem 1.6rem;
+}
+.spec-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.42rem 0;
+    border-bottom: 1px solid rgba(0,0,0,.06);
+    font-size: 0.93rem;
+}
+.spec-row:last-child { border-bottom: none; }
+.spec-label {
+    color: #6c757d;
+    font-weight: 500;
+    min-width: 130px;
+}
+.spec-value { font-weight: 600; }
+.preview-name {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 0.1rem;
+}
+.preview-code {
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-bottom: 1rem;
+}
+</style>
+
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h2><i class="fas fa-cogs me-2"></i>Gestión de Repuestos</h2>
     <div>
@@ -67,10 +149,10 @@ $content = ob_start();
         </div>
         <?php else: ?>
         <div class="table-responsive">
-            <table class="table table-hover mb-0">
+            <table class="table table-hover mb-0" style="vertical-align: middle;">
                 <thead class="table-light">
                     <tr>
-                        <th style="width: 60px;">Imagen</th>
+                        <th style="width: 90px;">Imagen</th>
                         <th>Código</th>
                         <th>Nombre</th>
                         <th>Categoría</th>
@@ -83,61 +165,140 @@ $content = ob_start();
                 </thead>
                 <tbody>
                     <?php foreach ($repuestos as $repuesto): ?>
+                    <?php 
+                    $imgPath = $repuesto->getImagen();
+                    $imgUrl  = $imgPath ? ((strpos($imgPath, 'data:') === 0) ? $imgPath : BASE_URL . $imgPath) : '';
+                    $nombreEnc = htmlspecialchars($repuesto->getNombre());
+                    $codigoEnc = htmlspecialchars($repuesto->getCodigo());
+                    $catEnc    = htmlspecialchars($repuesto->getCategoria());
+                    $descEnc   = htmlspecialchars($repuesto->getDescripcion() ?? '');
+                    $pCompra   = number_format($repuesto->getPrecioCompra(), 2);
+                    $pVenta    = number_format($repuesto->getPrecioVenta(), 2);
+                    $stock     = $repuesto->getStockActual();
+                    $sMin      = $repuesto->getStockMinimo();
+                    $sMax      = $repuesto->getStockMaximo();
+                    $margen    = number_format($repuesto->getMargenGanancia(), 2);
+                    $estadoStockNombre = $repuesto->getEstadoStockNombre();
+                    $estadoStockClase  = $repuesto->getEstadoStockClase();
+                    $activo    = $repuesto->isActivo() ? 'Activo' : 'Inactivo';
+                    $activoCls = $repuesto->isActivo() ? 'bg-success' : 'bg-secondary';
+                    ?>
                     <tr>
                         <td>
-                            <?php if ($repuesto->getImagen()): ?>
-                                <?php 
-                                $imgPath = $repuesto->getImagen();
-                                $imgUrl = (strpos($imgPath, 'data:') === 0) ? $imgPath : BASE_URL . $imgPath;
-                                ?>
-                                <img src="<?= $imgUrl ?>" alt="Imagen" class="rounded" style="width: 45px; height: 45px; object-fit: cover; border: 1px solid var(--border-subtle);">
+                            <?php if ($imgUrl): ?>
+                                <img 
+                                    src="<?= $imgUrl ?>" 
+                                    alt="<?= $nombreEnc ?>" 
+                                    class="repuesto-thumb"
+                                    onclick="openPreview(
+                                        '<?= addslashes($imgUrl) ?>',
+                                        '<?= addslashes($nombreEnc) ?>',
+                                        '<?= addslashes($codigoEnc) ?>',
+                                        '<?= addslashes($catEnc) ?>',
+                                        '<?= addslashes($descEnc) ?>',
+                                        '<?= $pCompra ?>',
+                                        '<?= $pVenta ?>',
+                                        '<?= $stock ?>',
+                                        '<?= $sMin ?>',
+                                        '<?= $sMax ?>',
+                                        '<?= $margen ?>',
+                                        '<?= addslashes($estadoStockNombre) ?>',
+                                        '<?= $estadoStockClase ?>',
+                                        '<?= addslashes($activo) ?>',
+                                        '<?= $activoCls ?>',
+                                        '<?= $repuesto->getId() ?>'
+                                    )"
+                                    title="Haz clic para ver detalles"
+                                >
                             <?php else: ?>
-                                <div class="bg-light rounded d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; border: 1px solid var(--border-subtle);">
-                                    <i class="fas fa-image text-muted" style="font-size: 1.2rem;"></i>
+                                <div class="no-img-thumb" 
+                                     onclick="openPreview(
+                                        '',
+                                        '<?= addslashes($nombreEnc) ?>',
+                                        '<?= addslashes($codigoEnc) ?>',
+                                        '<?= addslashes($catEnc) ?>',
+                                        '<?= addslashes($descEnc) ?>',
+                                        '<?= $pCompra ?>',
+                                        '<?= $pVenta ?>',
+                                        '<?= $stock ?>',
+                                        '<?= $sMin ?>',
+                                        '<?= $sMax ?>',
+                                        '<?= $margen ?>',
+                                        '<?= addslashes($estadoStockNombre) ?>',
+                                        '<?= $estadoStockClase ?>',
+                                        '<?= addslashes($activo) ?>',
+                                        '<?= $activoCls ?>',
+                                        '<?= $repuesto->getId() ?>'
+                                     )"
+                                     style="cursor:pointer;" title="Sin imagen — clic para ver detalles">
+                                    <i class="fas fa-image"></i>
                                 </div>
                             <?php endif; ?>
                         </td>
                         <td>
-                            <code class="text-primary"><?= htmlspecialchars($repuesto->getCodigo()) ?></code>
+                            <code class="text-primary"><?= $codigoEnc ?></code>
                         </td>
                         <td>
                             <div>
-                                <strong><?= htmlspecialchars($repuesto->getNombre()) ?></strong>
+                                <strong><?= $nombreEnc ?></strong>
                                 <?php if ($repuesto->getDescripcion()): ?>
                                 <br><small class="text-muted"><?= htmlspecialchars(substr($repuesto->getDescripcion(), 0, 50)) ?>...</small>
                                 <?php endif; ?>
                             </div>
                         </td>
                         <td>
-                            <span class="badge bg-info"><?= htmlspecialchars($repuesto->getCategoria()) ?></span>
+                            <span class="badge bg-info"><?= $catEnc ?></span>
                         </td>
                         <td>
-                            <span class="text-success">$<?= number_format($repuesto->getPrecioCompra(), 2) ?></span>
+                            <span class="text-success">S/ <?= $pCompra ?></span>
                         </td>
                         <td>
-                            <span class="text-primary">$<?= number_format($repuesto->getPrecioVenta(), 2) ?></span>
+                            <span class="text-primary">S/ <?= $pVenta ?></span>
                         </td>
                         <td>
                             <div class="d-flex align-items-center">
-                                <span class="me-2"><?= $repuesto->getStockActual() ?></span>
-                                <span class="badge <?= $repuesto->getEstadoStockClase() ?>">
-                                    <?= $repuesto->getEstadoStockNombre() ?>
+                                <span class="me-2"><?= $stock ?></span>
+                                <span class="badge <?= $estadoStockClase ?>">
+                                    <?= $estadoStockNombre ?>
                                 </span>
                             </div>
                             <small class="text-muted">
-                                Min: <?= $repuesto->getStockMinimo() ?> | 
-                                Max: <?= $repuesto->getStockMaximo() ?>
+                                Min: <?= $sMin ?> | 
+                                Max: <?= $sMax ?>
                             </small>
                         </td>
                         <td>
-                            <span class="badge <?= $repuesto->isActivo() ? 'bg-success' : 'bg-secondary' ?>">
-                                <?= $repuesto->isActivo() ? 'Activo' : 'Inactivo' ?>
+                            <span class="badge <?= $activoCls ?>">
+                                <?= $activo ?>
                             </span>
                         </td>
                         <td>
                             <div class="btn-group" role="group">
+                                <button type="button"
+                                        class="btn btn-sm btn-outline-secondary"
+                                        title="Vista rápida"
+                                        onclick="openPreview(
+                                            '<?= addslashes($imgUrl) ?>',
+                                            '<?= addslashes($nombreEnc) ?>',
+                                            '<?= addslashes($codigoEnc) ?>',
+                                            '<?= addslashes($catEnc) ?>',
+                                            '<?= addslashes($descEnc) ?>',
+                                            '<?= $pCompra ?>',
+                                            '<?= $pVenta ?>',
+                                            '<?= $stock ?>',
+                                            '<?= $sMin ?>',
+                                            '<?= $sMax ?>',
+                                            '<?= $margen ?>',
+                                            '<?= addslashes($estadoStockNombre) ?>',
+                                            '<?= $estadoStockClase ?>',
+                                            '<?= addslashes($activo) ?>',
+                                            '<?= $activoCls ?>',
+                                            '<?= $repuesto->getId() ?>'
+                                        )">
+                                    <i class="fas fa-expand-alt"></i>
+                                </button>
                                 <a href="<?= BASE_URL ?>repuestos/<?= $repuesto->getId() ?>" 
-                                   class="btn btn-sm btn-outline-info" title="Ver">
+                                   class="btn btn-sm btn-outline-info" title="Ver detalle completo">
                                     <i class="fas fa-eye"></i>
                                 </a>
                                 <a href="<?= BASE_URL ?>repuestos/<?= $repuesto->getId() ?>/editar" 
@@ -175,6 +336,78 @@ $content = ob_start();
 </nav>
 <?php endif; ?>
 
+<!-- Modal de Vista Previa del Repuesto -->
+<div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content overflow-hidden">
+            <div class="modal-header py-2 px-3">
+                <h6 class="modal-title mb-0" id="previewModalLabel">
+                    <i class="fas fa-expand-alt me-2 text-primary"></i>Vista Previa del Repuesto
+                </h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="row g-0">
+                    <!-- Imagen grande -->
+                    <div class="col-md-5 preview-img-wrap" id="previewImgWrap">
+                        <img id="previewImg" src="" alt="Imagen del repuesto" style="max-width:100%; max-height:420px; object-fit:contain;">
+                    </div>
+                    <!-- Especificaciones -->
+                    <div class="col-md-7 preview-specs">
+                        <div class="preview-name" id="previewNombre"></div>
+                        <div class="preview-code"><i class="fas fa-barcode me-1"></i><span id="previewCodigo"></span></div>
+
+                        <div class="spec-row">
+                            <span class="spec-label"><i class="fas fa-tags me-2 text-info"></i>Categoría</span>
+                            <span class="spec-value" id="previewCategoria"></span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-label"><i class="fas fa-align-left me-2 text-secondary"></i>Descripción</span>
+                            <span class="spec-value text-muted" id="previewDescripcion" style="font-weight:400; font-size:0.88rem; max-width:300px; text-align:right;"></span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-label"><i class="fas fa-dollar-sign me-2 text-success"></i>Precio Compra</span>
+                            <span class="spec-value text-success" id="previewPCompra"></span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-label"><i class="fas fa-tag me-2 text-primary"></i>Precio Venta</span>
+                            <span class="spec-value text-primary" id="previewPVenta"></span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-label"><i class="fas fa-chart-line me-2 text-success"></i>Margen</span>
+                            <span class="spec-value text-success" id="previewMargen"></span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-label"><i class="fas fa-boxes me-2"></i>Stock Actual</span>
+                            <span class="spec-value">
+                                <span id="previewStock"></span>
+                                &nbsp;<span id="previewStockBadge" class="badge"></span>
+                            </span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-label"><i class="fas fa-sliders-h me-2 text-muted"></i>Stock Min / Max</span>
+                            <span class="spec-value" id="previewStockMinMax"></span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-label"><i class="fas fa-toggle-on me-2"></i>Estado</span>
+                            <span id="previewEstado" class="badge"></span>
+                        </div>
+
+                        <div class="d-flex gap-2 mt-3 flex-wrap">
+                            <a id="previewBtnVer" href="#" class="btn btn-sm btn-info">
+                                <i class="fas fa-eye me-1"></i>Ver Completo
+                            </a>
+                            <a id="previewBtnEditar" href="#" class="btn btn-sm btn-warning">
+                                <i class="fas fa-edit me-1"></i>Editar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Modal de confirmación de eliminación -->
 <div class="modal fade" id="deleteModal" tabindex="-1">
     <div class="modal-dialog">
@@ -199,6 +432,48 @@ $content = ob_start();
 </div>
 
 <script>
+const BASE_URL = '<?= BASE_URL ?>';
+
+function openPreview(imgUrl, nombre, codigo, categoria, descripcion, pCompra, pVenta,
+                     stock, sMin, sMax, margen, estadoStockNombre, estadoStockClase, activo, activoCls, id) {
+
+    const wrap = document.getElementById('previewImgWrap');
+    const img  = document.getElementById('previewImg');
+
+    if (imgUrl) {
+        img.src = imgUrl;
+        img.style.display = 'block';
+        wrap.style.background = '#111';
+    } else {
+        img.style.display = 'none';
+        wrap.style.background = '#f8f9fa';
+        wrap.innerHTML = '<div class="text-center text-muted p-5"><i class="fas fa-image fa-4x mb-2"></i><br>Sin imagen</div>';
+    }
+
+    document.getElementById('previewNombre').textContent   = nombre;
+    document.getElementById('previewCodigo').textContent   = codigo;
+    document.getElementById('previewCategoria').textContent = categoria;
+    document.getElementById('previewDescripcion').textContent = descripcion || '—';
+    document.getElementById('previewPCompra').textContent  = 'S/ ' + pCompra;
+    document.getElementById('previewPVenta').textContent   = 'S/ ' + pVenta;
+    document.getElementById('previewMargen').textContent   = margen + '%';
+    document.getElementById('previewStock').textContent    = stock;
+    document.getElementById('previewStockMinMax').textContent = 'Mín ' + sMin + '  /  Máx ' + sMax;
+
+    const stockBadge = document.getElementById('previewStockBadge');
+    stockBadge.textContent  = estadoStockNombre;
+    stockBadge.className    = 'badge ' + estadoStockClase;
+
+    const estadoBadge = document.getElementById('previewEstado');
+    estadoBadge.textContent = activo;
+    estadoBadge.className   = 'badge ' + activoCls;
+
+    document.getElementById('previewBtnVer').href    = BASE_URL + 'repuestos/' + id;
+    document.getElementById('previewBtnEditar').href = BASE_URL + 'repuestos/' + id + '/editar';
+
+    new bootstrap.Modal(document.getElementById('previewModal')).show();
+}
+
 function confirmDelete(repuestoId, repuestoName) {
     document.getElementById('repuestoName').textContent = repuestoName;
     document.getElementById('deleteForm').action = '<?= BASE_URL ?>repuestos/' + repuestoId + '/eliminar';

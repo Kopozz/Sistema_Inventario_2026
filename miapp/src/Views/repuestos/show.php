@@ -169,20 +169,35 @@ $content = ob_start();
     <div class="col-md-4">
         <!-- Imagen del Repuesto -->
         <div class="card mb-4">
-            <div class="card-header">
-                <h6 class="mb-0"><i class="fas fa-image me-2"></i>Imagen</h6>
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h6 class="mb-0"><i class="fas fa-image me-2"></i>Imagen del Repuesto</h6>
+                <?php if ($repuesto->getImagen()): ?>
+                <button class="btn btn-sm btn-outline-secondary" onclick="openLightbox()" title="Ampliar imagen">
+                    <i class="fas fa-search-plus"></i>
+                </button>
+                <?php endif; ?>
             </div>
-            <div class="card-body text-center">
+            <div class="card-body text-center p-2">
                 <?php if ($repuesto->getImagen()): ?>
                     <?php 
                     $imgPath = $repuesto->getImagen();
                     $imgUrl = (strpos($imgPath, 'data:') === 0) ? $imgPath : BASE_URL . $imgPath;
                     ?>
-                    <img src="<?= $imgUrl ?>" alt="<?= htmlspecialchars($repuesto->getNombre()) ?>" class="img-fluid rounded shadow-sm" style="max-height: 250px; object-fit: contain;">
+                    <div style="background:#111; border-radius:8px; overflow:hidden; min-height:200px; display:flex; align-items:center; justify-content:center; cursor:zoom-in;" onclick="openLightbox()">
+                        <img src="<?= $imgUrl ?>" 
+                             alt="<?= htmlspecialchars($repuesto->getNombre()) ?>" 
+                             id="mainRepuestoImg"
+                             style="max-width:100%; max-height:360px; object-fit:contain; display:block;"
+                             title="Clic para ampliar">
+                    </div>
+                    <small class="text-muted mt-1 d-block"><i class="fas fa-search-plus me-1"></i>Clic en la imagen para ampliar</small>
                 <?php else: ?>
-                    <div class="p-5 bg-light text-muted rounded d-flex flex-column align-items-center justify-content-center">
-                        <i class="fas fa-image fa-3x mb-2 text-secondary"></i>
+                    <div class="p-5 bg-light text-muted rounded d-flex flex-column align-items-center justify-content-center" style="min-height:200px;">
+                        <i class="fas fa-image fa-4x mb-3 text-secondary"></i>
                         <span>Sin imagen asignada</span>
+                        <a href="<?= BASE_URL ?>repuestos/<?= $repuesto->getId() ?>/editar" class="btn btn-sm btn-outline-primary mt-3">
+                            <i class="fas fa-upload me-1"></i>Agregar imagen
+                        </a>
                     </div>
                 <?php endif; ?>
             </div>
@@ -278,7 +293,29 @@ $content = ob_start();
     </div>
 </div>
 
+<?php if ($repuesto->getImagen()): ?>
+<!-- Lightbox Modal -->
+<div class="modal fade" id="lightboxModal" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content" style="background:#000; border:none;">
+            <div class="modal-header" style="background:#111; border:none; padding:0.5rem 1rem;">
+                <h6 class="modal-title text-white mb-0"><?= htmlspecialchars($repuesto->getNombre()) ?></h6>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center p-2" style="background:#000;">
+                <img src="<?= $imgUrl ?>" 
+                     alt="<?= htmlspecialchars($repuesto->getNombre()) ?>" 
+                     style="max-width:100%; max-height:80vh; object-fit:contain;">
+            </div>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
+
 <script>
+function openLightbox() {
+    new bootstrap.Modal(document.getElementById('lightboxModal')).show();
+}
 function confirmDelete(repuestoId, repuestoName) {
     document.getElementById('repuestoName').textContent = repuestoName;
     document.getElementById('deleteForm').action = '<?= BASE_URL ?>repuestos/' + repuestoId;
