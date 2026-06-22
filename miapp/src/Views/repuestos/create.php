@@ -16,7 +16,7 @@ $content = ob_start();
                 <h5 class="mb-0">Información del Repuesto</h5>
             </div>
             <div class="card-body">
-                <form method="POST" action="<?= BASE_URL ?>repuestos">
+                <form method="POST" action="<?= BASE_URL ?>repuestos" enctype="multipart/form-data">
                     <?= \App\Core\Csrf::field(); ?>
                     <div class="row">
                         <div class="col-md-6">
@@ -146,6 +146,18 @@ $content = ob_start();
                                     </label>
                                     <div class="form-text">Los repuestos inactivos no aparecen en ventas</div>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="mb-4">
+                                <label for="imagen" class="form-label">
+                                    <i class="fas fa-image me-2"></i>Imagen del Repuesto
+                                </label>
+                                <input type="file" class="form-control" id="imagen" name="imagen" accept="image/*">
+                                <div class="form-text">Seleccione una imagen para el producto (Formatos permitidos: JPG, JPEG, PNG, GIF. Máx. 5MB)</div>
                             </div>
                         </div>
                     </div>

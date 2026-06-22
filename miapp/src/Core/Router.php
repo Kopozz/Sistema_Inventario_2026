@@ -23,6 +23,7 @@ class Router {
     // Fallback común cuando el servidor embebido incluye index.php en la URI
     $this->addRoute('GET', '/index.php', 'HomeController@index');
         $this->addRoute('GET', '/dashboard', 'DashboardController@index');
+        $this->addRoute('GET', '/migrar', 'HomeController@migrar');
         
         // Rutas de autenticación
         $this->addRoute('GET', '/login', 'AuthController@showLogin');

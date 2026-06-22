@@ -16,7 +16,7 @@ $content = ob_start();
                 <h5 class="mb-0">Información del Repuesto</h5>
             </div>
             <div class="card-body">
-                <form method="POST" action="<?= BASE_URL ?>repuestos/<?= $repuesto->getId() ?>">
+                <form method="POST" action="<?= BASE_URL ?>repuestos/<?= $repuesto->getId() ?>" enctype="multipart/form-data">
                     <?= \App\Core\Csrf::field(); ?>
                     
                     <div class="row">
@@ -144,6 +144,24 @@ $content = ob_start();
                                     </label>
                                     <div class="form-text">Los repuestos inactivos no aparecen en ventas</div>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="mb-4">
+                                <label for="imagen" class="form-label">
+                                    <i class="fas fa-image me-2"></i>Imagen del Repuesto
+                                </label>
+                                <?php if ($repuesto->getImagen()): ?>
+                                    <div class="mb-2">
+                                        <img src="<?= BASE_URL . $repuesto->getImagen() ?>" alt="Imagen actual" class="img-thumbnail" style="max-height: 150px; object-fit: contain;">
+                                        <div class="form-text text-muted">Imagen actual del producto. Subir una nueva reemplazará la anterior.</div>
+                                    </div>
+                                <?php endif; ?>
+                                <input type="file" class="form-control" id="imagen" name="imagen" accept="image/*">
+                                <div class="form-text">Seleccione una imagen para el producto (Formatos permitidos: JPG, JPEG, PNG, GIF. Máx. 5MB)</div>
                             </div>
                         </div>
                     </div>

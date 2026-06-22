@@ -19,6 +19,7 @@ class Repuesto {
     private $stockMinimo;
     private $stockMaximo;
     private $activo;
+    private $imagen;
     private $createdAt;
     private $updatedAt;
     
@@ -50,6 +51,7 @@ class Repuesto {
         $this->stockMinimo = $data['stock_minimo'] ?? 5;
         $this->stockMaximo = $data['stock_maximo'] ?? 100;
         $this->activo = $data['activo'] ?? true;
+        $this->imagen = $data['imagen'] ?? null;
         $this->createdAt = $data['created_at'] ?? null;
         $this->updatedAt = $data['updated_at'] ?? null;
     }
@@ -71,6 +73,7 @@ class Repuesto {
             'stock_minimo' => $this->stockMinimo,
             'stock_maximo' => $this->stockMaximo,
             'activo' => $this->activo,
+            'imagen' => $this->imagen,
             'created_at' => $this->createdAt,
             'updated_at' => $this->updatedAt
         ];
@@ -89,12 +92,18 @@ class Repuesto {
     public function getStockMinimo() { return $this->stockMinimo; }
     public function getStockMaximo() { return $this->stockMaximo; }
     public function isActivo() { return $this->activo; }
+    public function getImagen() { return $this->imagen; }
     public function getCreatedAt() { return $this->createdAt; }
     public function getUpdatedAt() { return $this->updatedAt; }
     
     // Setters
     public function setId($id) {
         $this->id = $id;
+        return $this;
+    }
+    
+    public function setImagen($imagen) {
+        $this->imagen = $imagen;
         return $this;
     }
 

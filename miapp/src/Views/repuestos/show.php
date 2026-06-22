@@ -167,6 +167,23 @@ $content = ob_start();
     </div>
     
     <div class="col-md-4">
+        <!-- Imagen del Repuesto -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h6 class="mb-0"><i class="fas fa-image me-2"></i>Imagen</h6>
+            </div>
+            <div class="card-body text-center">
+                <?php if ($repuesto->getImagen()): ?>
+                    <img src="<?= BASE_URL . $repuesto->getImagen() ?>" alt="<?= htmlspecialchars($repuesto->getNombre()) ?>" class="img-fluid rounded shadow-sm" style="max-height: 250px; object-fit: contain;">
+                <?php else: ?>
+                    <div class="p-5 bg-light text-muted rounded d-flex flex-column align-items-center justify-content-center">
+                        <i class="fas fa-image fa-3x mb-2 text-secondary"></i>
+                        <span>Sin imagen asignada</span>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+        
         <!-- Estado del Stock -->
         <div class="card mb-4">
             <div class="card-header">

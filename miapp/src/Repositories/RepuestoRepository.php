@@ -215,8 +215,8 @@ class RepuestoRepository {
      */
     public function create(Repuesto $repuesto) {
         $sql = "INSERT INTO repuestos (codigo, nombre, descripcion, categoria_id, precio_compra, 
-                precio_venta, stock_actual, stock_minimo, stock_maximo, activo) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                precio_venta, stock_actual, stock_minimo, stock_maximo, activo, imagen) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         
         $this->db->query($sql, [
             $repuesto->getCodigo(),
@@ -228,7 +228,8 @@ class RepuestoRepository {
             $repuesto->getStockActual(),
             $repuesto->getStockMinimo(),
             $repuesto->getStockMaximo(),
-            $repuesto->isActivo() ? 1 : 0
+            $repuesto->isActivo() ? 1 : 0,
+            $repuesto->getImagen()
         ]);
         
         $repuesto->setId($this->db->lastInsertId());
@@ -242,7 +243,7 @@ class RepuestoRepository {
         $sql = "UPDATE repuestos 
                 SET codigo = ?, nombre = ?, descripcion = ?, categoria_id = ?, 
                     precio_compra = ?, precio_venta = ?, stock_actual = ?, 
-                    stock_minimo = ?, stock_maximo = ?, activo = ?, 
+                    stock_minimo = ?, stock_maximo = ?, activo = ?, imagen = ?, 
                     updated_at = CURRENT_TIMESTAMP 
                 WHERE id = ?";
         
@@ -257,6 +258,7 @@ class RepuestoRepository {
             $repuesto->getStockMinimo(),
             $repuesto->getStockMaximo(),
             $repuesto->isActivo() ? 1 : 0,
+            $repuesto->getImagen(),
             $repuesto->getId()
         ]);
         

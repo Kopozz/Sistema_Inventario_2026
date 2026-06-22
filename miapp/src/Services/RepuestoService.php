@@ -102,6 +102,56 @@ class RepuestoService {
     }
     
     /**
+     * Procesar la subida de una imagen para repuesto
+     */
+    private function uploadImagen($file) {
+        if (!isset($file) || $file['error'] !== UPLOAD_ERR_OK) {
+            return null;
+        }
+
+        // Validar tamaño
+        if ($file['size'] > MAX_FILE_SIZE) {
+            throw new \Exception('El tamaño de la imagen supera el límite permitido de 5MB');
+        }
+
+        // Validar extensión
+        $filename = $file['name'];
+        $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+        if (!in_array($ext, ALLOWED_EXTENSIONS)) {
+            throw new \Exception('Formato de archivo no permitido. Solo se aceptan: ' . implode(', ', ALLOWED_EXTENSIONS));
+        }
+
+        // Crear directorio de destino si no existe
+        $targetDir = PUBLIC_PATH . '/uploads/repuestos/';
+        if (!is_dir($targetDir)) {
+            mkdir($targetDir, 0755, true);
+        }
+
+        // Generar nombre de archivo único
+        $newFilename = uniqid('repuesto_', true) . '.' . $ext;
+        $targetPath = $targetDir . $newFilename;
+
+        // Mover archivo
+        if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
+            throw new \Exception('No se pudo guardar la imagen en el servidor');
+        }
+
+        // Devolver la ruta relativa a public
+        return 'uploads/repuestos/' . $newFilename;
+    }
+
+    /**
+     * Eliminar la imagen del servidor si existe
+     */
+    private function deleteImagenFile($relativePath) {
+        if (empty($relativePath)) return;
+        $fullPath = PUBLIC_PATH . '/' . $relativePath;
+        if (file_exists($fullPath) && is_file($fullPath)) {
+            unlink($fullPath);
+        }
+    }
+
+    /**
      * Crear nuevo repuesto (RF4)
      */
     public function createRepuesto($data) {
@@ -134,9 +184,19 @@ class RepuestoService {
                  ->setStockMaximo($data['stock_maximo'] ?? 100)
                  ->setActivo($data['activo'] ?? true);
         
+        // Procesar imagen si viene en los datos
+        if (isset($data['imagen']) && is_array($data['imagen']) && $data['imagen']['error'] === UPLOAD_ERR_OK) {
+            $uploadedPath = $this->uploadImagen($data['imagen']);
+            $repuesto->setImagen($uploadedPath);
+        }
+        
         // Validar el repuesto
         $errors = $repuesto->validate();
         if (!empty($errors)) {
+            // Eliminar imagen subida si falla validación posterior
+            if ($repuesto->getImagen()) {
+                $this->deleteImagenFile($repuesto->getImagen());
+            }
             throw new \Exception(implode(', ', $errors));
         }
         
@@ -201,15 +261,35 @@ class RepuestoService {
         if (isset($data['activo'])) {
             $repuesto->setActivo($data['activo']);
         }
+
+        // Procesar imagen si viene en los datos
+        $newUploaded = false;
+        $oldImagen = $repuesto->getImagen();
+        if (isset($data['imagen']) && is_array($data['imagen']) && $data['imagen']['error'] === UPLOAD_ERR_OK) {
+            $uploadedPath = $this->uploadImagen($data['imagen']);
+            $repuesto->setImagen($uploadedPath);
+            $newUploaded = true;
+        }
         
         // Validar el repuesto actualizado
         $errors = $repuesto->validate();
         if (!empty($errors)) {
+            // Eliminar nueva imagen si la validación falla
+            if ($newUploaded) {
+                $this->deleteImagenFile($repuesto->getImagen());
+            }
             throw new \Exception(implode(', ', $errors));
         }
         
         // Guardar cambios
-        return $this->repuestoRepository->update($repuesto);
+        $result = $this->repuestoRepository->update($repuesto);
+
+        // Si la actualización tuvo éxito y se subió nueva imagen, eliminar la anterior del disco
+        if ($newUploaded && !empty($oldImagen)) {
+            $this->deleteImagenFile($oldImagen);
+        }
+
+        return $result;
     }
     
     /**
@@ -222,8 +302,18 @@ class RepuestoService {
         if ($repuesto->getStockActual() > 0) {
             throw new \Exception('No se puede eliminar un repuesto que tiene stock disponible');
         }
+
+        // Obtener ruta de la imagen antes de eliminar de BD
+        $imagen = $repuesto->getImagen();
         
-        return $this->repuestoRepository->delete($id);
+        $result = $this->repuestoRepository->delete($id);
+
+        // Si se borró de la BD, borrar del disco
+        if ($result && !empty($imagen)) {
+            $this->deleteImagenFile($imagen);
+        }
+
+        return $result;
     }
     
     /**

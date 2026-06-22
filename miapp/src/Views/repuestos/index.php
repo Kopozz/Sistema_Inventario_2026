@@ -70,6 +70,7 @@ $content = ob_start();
             <table class="table table-hover mb-0">
                 <thead class="table-light">
                     <tr>
+                        <th style="width: 60px;">Imagen</th>
                         <th>Código</th>
                         <th>Nombre</th>
                         <th>Categoría</th>
@@ -83,6 +84,15 @@ $content = ob_start();
                 <tbody>
                     <?php foreach ($repuestos as $repuesto): ?>
                     <tr>
+                        <td>
+                            <?php if ($repuesto->getImagen()): ?>
+                                <img src="<?= BASE_URL . $repuesto->getImagen() ?>" alt="Imagen" class="rounded" style="width: 45px; height: 45px; object-fit: cover; border: 1px solid var(--border-subtle);">
+                            <?php else: ?>
+                                <div class="bg-light rounded d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; border: 1px solid var(--border-subtle);">
+                                    <i class="fas fa-image text-muted" style="font-size: 1.2rem;"></i>
+                                </div>
+                            <?php endif; ?>
+                        </td>
                         <td>
                             <code class="text-primary"><?= htmlspecialchars($repuesto->getCodigo()) ?></code>
                         </td>

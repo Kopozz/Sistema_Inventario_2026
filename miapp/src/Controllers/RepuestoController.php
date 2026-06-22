@@ -107,7 +107,8 @@ class RepuestoController {
                 'stock_actual' => $_POST['stock_actual'] ?? 0,
                 'stock_minimo' => $_POST['stock_minimo'] ?? 5,
                 'stock_maximo' => $_POST['stock_maximo'] ?? 100,
-                'activo' => isset($_POST['activo'])
+                'activo' => isset($_POST['activo']),
+                'imagen' => $_FILES['imagen'] ?? null
             ];
             
             $repuesto = $this->repuestoService->createRepuesto($data);
@@ -192,7 +193,8 @@ class RepuestoController {
                 'stock_actual' => $_POST['stock_actual'] ?? 0,
                 'stock_minimo' => $_POST['stock_minimo'] ?? 5,
                 'stock_maximo' => $_POST['stock_maximo'] ?? 100,
-                'activo' => isset($_POST['activo'])
+                'activo' => isset($_POST['activo']),
+                'imagen' => $_FILES['imagen'] ?? null
             ];
             
             $this->repuestoService->updateRepuesto($id, $data);

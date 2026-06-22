@@ -96,6 +96,7 @@ class UserController {
                 'nombre' => $_POST['nombre'] ?? '',
                 'email' => $_POST['email'] ?? '',
                 'password' => $_POST['password'] ?? '',
+                'password_confirmation' => $_POST['password_confirmation'] ?? '',
                 'rol' => $_POST['rol'] ?? ROLE_EMPLOYEE,
                 'activo' => isset($_POST['activo'])
             ];
