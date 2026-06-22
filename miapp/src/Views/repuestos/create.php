@@ -153,11 +153,15 @@ $content = ob_start();
                     <div class="row">
                         <div class="col-md-12">
                             <div class="mb-4">
-                                <label for="imagen" class="form-label">
+                                <label for="imagen_file" class="form-label">
                                     <i class="fas fa-image me-2"></i>Imagen del Repuesto
                                 </label>
-                                <input type="file" class="form-control" id="imagen" name="imagen" accept="image/*">
-                                <div class="form-text">Seleccione una imagen para el producto (Formatos permitidos: JPG, JPEG, PNG, GIF. Máx. 5MB)</div>
+                                <input type="file" class="form-control" id="imagen_file" accept="image/*">
+                                <input type="hidden" id="imagen_base64" name="imagen_base64">
+                                <div class="form-text">Seleccione una imagen para el producto (Se comprimirá automáticamente en el navegador)</div>
+                                <div class="mt-2 d-none" id="preview_container">
+                                    <img id="image_preview" src="" alt="Vista previa" class="img-thumbnail" style="max-height: 150px; object-fit: contain;">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -177,6 +181,52 @@ $content = ob_start();
 </div>
 
 <script>
+// Manejar compresión de imagen en el cliente
+document.getElementById('imagen_file').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(event) {
+        const img = new Image();
+        img.onload = function() {
+            const canvas = document.createElement('canvas');
+            const MAX_WIDTH = 800;
+            const MAX_HEIGHT = 800;
+            let width = img.width;
+            let height = img.height;
+
+            if (width > height) {
+                if (width > MAX_WIDTH) {
+                    height *= MAX_WIDTH / width;
+                    width = MAX_WIDTH;
+                }
+            } else {
+                if (height > MAX_HEIGHT) {
+                    width *= MAX_HEIGHT / height;
+                    height = MAX_HEIGHT;
+                }
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+
+            // Comprimir a JPEG con calidad de 0.7 (ligero y de excelente calidad)
+            const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+            document.getElementById('imagen_base64').value = dataUrl;
+            
+            // Mostrar vista previa
+            const preview = document.getElementById('image_preview');
+            preview.src = dataUrl;
+            document.getElementById('preview_container').classList.remove('d-none');
+        };
+        img.src = event.target.result;
+    };
+    reader.readAsDataURL(file);
+});
+
 // Calcular margen de ganancia automáticamente
 document.getElementById('precio_compra').addEventListener('input', calculateMargin);
 document.getElementById('precio_venta').addEventListener('input', calculateMargin);

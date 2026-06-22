@@ -26,10 +26,11 @@ class HomeController {
             $column = $stmt->fetch();
             
             if (!$column) {
-                $db->query("ALTER TABLE repuestos ADD COLUMN imagen VARCHAR(255) NULL AFTER activo");
-                echo "<h2>Base de datos actualizada con éxito. La columna 'imagen' ha sido agregada a la tabla 'repuestos'.</h2>";
+                $db->query("ALTER TABLE repuestos ADD COLUMN imagen MEDIUMTEXT NULL AFTER activo");
+                echo "<h2>Base de datos actualizada con éxito. La columna 'imagen' (MEDIUMTEXT) ha sido agregada a la tabla 'repuestos'.</h2>";
             } else {
-                echo "<h2>La base de datos ya está actualizada. La columna 'imagen' ya existe.</h2>";
+                $db->query("ALTER TABLE repuestos MODIFY COLUMN imagen MEDIUMTEXT NULL");
+                echo "<h2>Base de datos actualizada con éxito. La columna 'imagen' ha sido modificada a MEDIUMTEXT para soportar imágenes en Base64.</h2>";
             }
             echo "<p><a href='" . BASE_URL . "'>Ir al Inicio</a></p>";
         } catch (\Exception $e) {

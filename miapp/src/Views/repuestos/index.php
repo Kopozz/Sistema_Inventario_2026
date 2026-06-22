@@ -86,7 +86,11 @@ $content = ob_start();
                     <tr>
                         <td>
                             <?php if ($repuesto->getImagen()): ?>
-                                <img src="<?= BASE_URL . $repuesto->getImagen() ?>" alt="Imagen" class="rounded" style="width: 45px; height: 45px; object-fit: cover; border: 1px solid var(--border-subtle);">
+                                <?php 
+                                $imgPath = $repuesto->getImagen();
+                                $imgUrl = (strpos($imgPath, 'data:') === 0) ? $imgPath : BASE_URL . $imgPath;
+                                ?>
+                                <img src="<?= $imgUrl ?>" alt="Imagen" class="rounded" style="width: 45px; height: 45px; object-fit: cover; border: 1px solid var(--border-subtle);">
                             <?php else: ?>
                                 <div class="bg-light rounded d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; border: 1px solid var(--border-subtle);">
                                     <i class="fas fa-image text-muted" style="font-size: 1.2rem;"></i>

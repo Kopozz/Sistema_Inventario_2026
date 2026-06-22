@@ -174,7 +174,11 @@ $content = ob_start();
             </div>
             <div class="card-body text-center">
                 <?php if ($repuesto->getImagen()): ?>
-                    <img src="<?= BASE_URL . $repuesto->getImagen() ?>" alt="<?= htmlspecialchars($repuesto->getNombre()) ?>" class="img-fluid rounded shadow-sm" style="max-height: 250px; object-fit: contain;">
+                    <?php 
+                    $imgPath = $repuesto->getImagen();
+                    $imgUrl = (strpos($imgPath, 'data:') === 0) ? $imgPath : BASE_URL . $imgPath;
+                    ?>
+                    <img src="<?= $imgUrl ?>" alt="<?= htmlspecialchars($repuesto->getNombre()) ?>" class="img-fluid rounded shadow-sm" style="max-height: 250px; object-fit: contain;">
                 <?php else: ?>
                     <div class="p-5 bg-light text-muted rounded d-flex flex-column align-items-center justify-content-center">
                         <i class="fas fa-image fa-3x mb-2 text-secondary"></i>
