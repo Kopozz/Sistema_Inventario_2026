@@ -24,6 +24,7 @@ class Router {
     $this->addRoute('GET', '/index.php', 'HomeController@index');
         $this->addRoute('GET', '/dashboard', 'DashboardController@index');
         $this->addRoute('GET', '/migrar', 'HomeController@migrar');
+        $this->addRoute('GET', '/migrate', 'MigrateController@run');
         
         // Rutas de autenticación
         $this->addRoute('GET', '/login', 'AuthController@showLogin');
