@@ -434,35 +434,75 @@ $content = ob_start();
 <script>
 const BASE_URL = '<?= BASE_URL ?>';
 
+// ── Singleton Modal instances ────────────────────────────────────────────────
+let _previewModalInstance = null;
+let _deleteModalInstance  = null;
+
+function getPreviewModal() {
+    const el = document.getElementById('previewModal');
+    // Si ya existe una instancia de Bootstrap, reutilizarla
+    if (!_previewModalInstance) {
+        _previewModalInstance = new bootstrap.Modal(el, {
+            backdrop: true,
+            keyboard: true,
+            focus: true
+        });
+        // Limpiar al cerrar para no tener backdrops huérfanos
+        el.addEventListener('hidden.bs.modal', function () {
+            document.body.classList.remove('modal-open');
+            document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
+        });
+    }
+    return _previewModalInstance;
+}
+
+function getDeleteModal() {
+    const el = document.getElementById('deleteModal');
+    if (!_deleteModalInstance) {
+        _deleteModalInstance = new bootstrap.Modal(el, {
+            backdrop: true,
+            keyboard: true
+        });
+        el.addEventListener('hidden.bs.modal', function () {
+            document.body.classList.remove('modal-open');
+            document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
+        });
+    }
+    return _deleteModalInstance;
+}
+// ────────────────────────────────────────────────────────────────────────────
+
 function openPreview(imgUrl, nombre, codigo, categoria, descripcion, pCompra, pVenta,
                      stock, sMin, sMax, margen, estadoStockNombre, estadoStockClase, activo, activoCls, id) {
 
+    // Limpiar backdrops residuales antes de abrir
+    document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
+    document.body.classList.remove('modal-open');
+    document.body.style.removeProperty('padding-right');
+
     const wrap = document.getElementById('previewImgWrap');
-    const img  = document.getElementById('previewImg');
 
     if (imgUrl) {
-        img.src = imgUrl;
-        img.style.display = 'block';
         wrap.style.background = '#111';
+        wrap.innerHTML = `<img src="${imgUrl}" alt="Imagen del repuesto" style="max-width:100%; max-height:420px; object-fit:contain;">`;
     } else {
-        img.style.display = 'none';
         wrap.style.background = '#f8f9fa';
         wrap.innerHTML = '<div class="text-center text-muted p-5"><i class="fas fa-image fa-4x mb-2"></i><br>Sin imagen</div>';
     }
 
-    document.getElementById('previewNombre').textContent   = nombre;
-    document.getElementById('previewCodigo').textContent   = codigo;
+    document.getElementById('previewNombre').textContent    = nombre;
+    document.getElementById('previewCodigo').textContent    = codigo;
     document.getElementById('previewCategoria').textContent = categoria;
     document.getElementById('previewDescripcion').textContent = descripcion || '—';
-    document.getElementById('previewPCompra').textContent  = 'S/ ' + pCompra;
-    document.getElementById('previewPVenta').textContent   = 'S/ ' + pVenta;
-    document.getElementById('previewMargen').textContent   = margen + '%';
-    document.getElementById('previewStock').textContent    = stock;
+    document.getElementById('previewPCompra').textContent   = 'S/ ' + pCompra;
+    document.getElementById('previewPVenta').textContent    = 'S/ ' + pVenta;
+    document.getElementById('previewMargen').textContent    = margen + '%';
+    document.getElementById('previewStock').textContent     = stock;
     document.getElementById('previewStockMinMax').textContent = 'Mín ' + sMin + '  /  Máx ' + sMax;
 
     const stockBadge = document.getElementById('previewStockBadge');
-    stockBadge.textContent  = estadoStockNombre;
-    stockBadge.className    = 'badge ' + estadoStockClase;
+    stockBadge.textContent = estadoStockNombre;
+    stockBadge.className   = 'badge ' + estadoStockClase;
 
     const estadoBadge = document.getElementById('previewEstado');
     estadoBadge.textContent = activo;
@@ -471,13 +511,18 @@ function openPreview(imgUrl, nombre, codigo, categoria, descripcion, pCompra, pV
     document.getElementById('previewBtnVer').href    = BASE_URL + 'repuestos/' + id;
     document.getElementById('previewBtnEditar').href = BASE_URL + 'repuestos/' + id + '/editar';
 
-    new bootstrap.Modal(document.getElementById('previewModal')).show();
+    getPreviewModal().show();
 }
 
 function confirmDelete(repuestoId, repuestoName) {
+    // Limpiar backdrops residuales
+    document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
+    document.body.classList.remove('modal-open');
+    document.body.style.removeProperty('padding-right');
+
     document.getElementById('repuestoName').textContent = repuestoName;
-    document.getElementById('deleteForm').action = '<?= BASE_URL ?>repuestos/' + repuestoId + '/eliminar';
-    new bootstrap.Modal(document.getElementById('deleteModal')).show();
+    document.getElementById('deleteForm').action = BASE_URL + 'repuestos/' + repuestoId + '/eliminar';
+    getDeleteModal().show();
 }
 </script>
 

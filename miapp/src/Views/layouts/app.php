@@ -152,6 +152,15 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;
         }
 
+        /* ── Fix global para modales de Bootstrap ───────────────────────────
+           Los modales deben apilarse encima de todo, sin que overflow:hidden
+           de .card o .main-content los bloquee o recorte.                  */
+        .modal          { z-index: 1055 !important; }
+        .modal-backdrop { z-index: 1050 !important; }
+        .modal-dialog   { pointer-events: auto !important; }
+        /* Garantizar que el backdrop y el modal estén al nivel del body */
+        body > .modal-backdrop { z-index: 1050 !important; }
+
         .card-header {
             background-color: rgba(0, 0, 0, 0.02) !important;
             border-bottom: 1px solid var(--border-subtle) !important;
